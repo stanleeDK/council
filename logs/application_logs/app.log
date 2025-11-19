@@ -1,0 +1,241 @@
+2025/11/17 17:02:12 Channel found in csv to scrape 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/17 17:02:12 Channel found in csv to scrape 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/17 17:02:12 Started - 2 channels to be scraped
+2025/11/17 17:02:24 VIDEO BEING ADDED: Javi ogoRoV88Sb0 NUMBER OF VIDEOS IN HASHMAP: 8
+2025/11/17 17:02:24 VIDEO BEING ADDED: Pubg 4OEl-bbR7Mo NUMBER OF VIDEOS IN HASHMAP: 9
+2025/11/17 17:02:24 All yt-dlp workers completed. Starting caption downloads...
+2025/11/17 17:02:24 SRT Downloader started:  4
+2025/11/17 17:02:24 SRT Downloader started:  1
+2025/11/17 17:02:24 SRT Downloader started:  3
+2025/11/17 17:02:24 SRT Downloader started:  2
+2025/11/17 17:02:24 SRT Downloader started:  0
+2025/11/17 17:02:24 SRT Downloader ended:  4
+2025/11/17 17:02:24 SRT Downloader ended:  3
+2025/11/17 17:02:24 SRT Downloader ended:  2
+2025/11/17 17:02:24 SRT Downloader ended:  1
+2025/11/17 17:02:24 SRT Downloader ended:  0
+2025/11/17 17:02:24 All caption downloads completed.
+2025/11/17 17:02:24 === ERROR SUMMARY ===
+2025/11/17 17:02:24 Total errors: 1
+2025/11/17 17:02:24   ERROR: 1
+2025/11/17 17:02:24 Application completed successfully.
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:1 Channel:Javi Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel:Pubg Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:02:24 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:07:48 Channel found in csv to scrape 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/17 17:07:48 Channel found in csv to scrape 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/17 17:07:48 Started - 2 channels to be scraped
+2025/11/17 17:08:00 {1 Javi 20181030 ogoRoV88Sb0  https://www.youtube.com/watch?v=ogoRoV88Sb0}
+2025/11/17 17:08:00 VIDEO FOUND ON: Javi VIDEO ID: ogoRoV88Sb0 NUMBER OF VIDEOS IN HASHMAP: 8
+2025/11/17 17:08:00 {0 Pubg 20200824 4OEl-bbR7Mo  https://www.youtube.com/watch?v=4OEl-bbR7Mo}
+2025/11/17 17:08:00 VIDEO FOUND ON: Pubg VIDEO ID: 4OEl-bbR7Mo NUMBER OF VIDEOS IN HASHMAP: 9
+2025/11/17 17:08:00 All yt-dlp workers completed. Starting caption downloads...
+2025/11/17 17:08:00 SRT Downloader started:  4
+2025/11/17 17:08:00 SRT Downloader started:  2
+2025/11/17 17:08:00 SRT Downloader started:  0
+2025/11/17 17:08:00 SRT Downloader started:  3
+2025/11/17 17:08:00 SRT Downloader started:  1
+2025/11/17 17:08:00 SRT Downloader ended:  4
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel:Pubg Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 SRT Downloader ended:  3
+2025/11/17 17:08:00 SRT Downloader ended:  2
+2025/11/17 17:08:00 SRT Downloader ended:  0
+2025/11/17 17:08:00 SRT Downloader ended:  1
+2025/11/17 17:08:00 [ERROR] Worker:1 Channel:Javi Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:08:00 All caption downloads completed.
+2025/11/17 17:08:00 === ERROR SUMMARY ===
+2025/11/17 17:08:00 Total errors: 10
+2025/11/17 17:08:00   ERROR: 10
+2025/11/17 17:08:00 Application completed successfully.
+2025/11/17 17:23:53 Channel found in csv to scrape 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/17 17:23:53 Channel found in csv to scrape 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/17 17:23:53 Started - 2 channels to be scraped
+2025/11/17 17:24:05 {0 Pubg 20200824 4OEl-bbR7Mo  https://www.youtube.com/watch?v=4OEl-bbR7Mo}
+2025/11/17 17:24:05 VIDEO FOUND ON: Pubg VIDEO ID: 4OEl-bbR7Mo NUMBER OF VIDEOS IN HASHMAP: 8
+2025/11/17 17:24:05 {1 Javi 20181030 ogoRoV88Sb0  https://www.youtube.com/watch?v=ogoRoV88Sb0}
+2025/11/17 17:24:05 VIDEO FOUND ON: Javi VIDEO ID: ogoRoV88Sb0 NUMBER OF VIDEOS IN HASHMAP: 9
+2025/11/17 17:24:05 All yt-dlp workers completed. Starting caption downloads...
+2025/11/17 17:24:05 SRT Downloader started:  4
+2025/11/17 17:24:05 SRT Downloader ended:  4
+2025/11/17 17:24:05 SRT Downloader started:  3
+2025/11/17 17:24:05 SRT Downloader ended:  3
+2025/11/17 17:24:05 SRT Downloader started:  2
+2025/11/17 17:24:05 SRT Downloader ended:  2
+2025/11/17 17:24:05 SRT Downloader started:  1
+2025/11/17 17:24:05 SRT Downloader ended:  1
+2025/11/17 17:24:05 SRT Downloader started:  0
+2025/11/17 17:24:05 SRT Downloader ended:  0
+2025/11/17 17:24:05 All caption downloads completed.
+2025/11/17 17:24:05 === ERROR SUMMARY ===
+2025/11/17 17:24:05 Total errors: 0
+2025/11/17 17:24:05 Application completed successfully.
+2025/11/17 17:32:49 Channel found in csv to scrape 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/17 17:32:49 Channel found in csv to scrape 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/17 17:32:49 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED: 8
+2025/11/17 17:32:49 Started - 2 channels to be scraped
+2025/11/17 17:33:01 {1 Javi 20181030 ogoRoV88Sb0  https://www.youtube.com/watch?v=ogoRoV88Sb0}
+2025/11/17 17:33:01 VIDEO FOUND ON: Javi VIDEO ID: ogoRoV88Sb0 NUMBER OF VIDEOS IN HASHMAP: 8
+2025/11/17 17:33:01 {0 Pubg 20200824 4OEl-bbR7Mo  https://www.youtube.com/watch?v=4OEl-bbR7Mo}
+2025/11/17 17:33:01 VIDEO FOUND ON: Pubg VIDEO ID: 4OEl-bbR7Mo NUMBER OF VIDEOS IN HASHMAP: 9
+2025/11/17 17:33:01 All yt-dlp workers completed. Starting caption downloads...
+2025/11/17 17:33:01 SRT Downloader started:  4
+2025/11/17 17:33:01 SRT Downloader ended:  4
+2025/11/17 17:33:01 SRT Downloader started:  0
+2025/11/17 17:33:01 SRT Downloader ended:  0
+2025/11/17 17:33:01 SRT Downloader started:  1
+2025/11/17 17:33:01 SRT Downloader ended:  1
+2025/11/17 17:33:01 SRT Downloader started:  3
+2025/11/17 17:33:01 SRT Downloader ended:  3
+2025/11/17 17:33:01 SRT Downloader started:  2
+2025/11/17 17:33:01 SRT Downloader ended:  2
+2025/11/17 17:33:01 All caption downloads completed.
+2025/11/17 17:33:01 === ERROR SUMMARY ===
+2025/11/17 17:33:01 Total errors: 0
+2025/11/17 17:33:01 Application completed successfully.
+2025/11/17 17:49:34 Channel found in csv to scrape 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/17 17:49:34 Channel found in csv to scrape 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/17 17:49:34 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/17 17:49:34 Started - 2 channels to be scraped
+2025/11/17 17:49:46 Video has no captions: {0 Pubg 20200824 4OEl-bbR7Mo  https://www.youtube.com/watch?v=4OEl-bbR7Mo}
+2025/11/17 17:49:46 VIDEO FOUND ON: Pubg VIDEO ID: 4OEl-bbR7Mo NUMBER OF VIDEOS IN HASHMAP: 8
+2025/11/17 17:49:46 Video has no captions: {1 Javi 20181030 ogoRoV88Sb0  https://www.youtube.com/watch?v=ogoRoV88Sb0}
+2025/11/17 17:49:46 VIDEO FOUND ON: Javi VIDEO ID: ogoRoV88Sb0 NUMBER OF VIDEOS IN HASHMAP: 9
+2025/11/17 17:49:46 All yt-dlp workers completed. Starting caption downloads...
+2025/11/17 17:49:46 SRT Downloader started:  4
+2025/11/17 17:49:46 SRT Downloader started:  0
+2025/11/17 17:49:46 SRT Downloader started:  2
+2025/11/17 17:49:46 SRT Downloader started:  1
+2025/11/17 17:49:46 SRT Downloader started:  3
+2025/11/17 17:49:46 SRT Downloader ended:  4
+2025/11/17 17:49:46 SRT Downloader ended:  2
+2025/11/17 17:49:46 SRT Downloader ended:  0
+2025/11/17 17:49:46 SRT Downloader ended:  3
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 All caption downloads completed.
+2025/11/17 17:49:46 === ERROR SUMMARY ===
+2025/11/17 17:49:46 Total errors: 3
+2025/11/17 17:49:46   ERROR: 3
+2025/11/17 17:49:46 Application completed successfully.
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel:Pubg Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:1 Channel:Javi Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/17 17:49:46 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:22 Channel found in csv to scrape 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/18 19:03:22 Channel found in csv to scrape 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/18 19:03:22 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/18 19:03:22 Started - 2 channels to be scraped
+2025/11/18 19:03:34 Video has no captions: {1 Javi 20181030 ogoRoV88Sb0  https://www.youtube.com/watch?v=ogoRoV88Sb0}
+2025/11/18 19:03:34 VIDEO FOUND ON: Javi VIDEO ID: ogoRoV88Sb0 NUMBER OF VIDEOS IN HASHMAP: 8
+2025/11/18 19:03:34 Video has no captions: {0 Pubg 20200824 4OEl-bbR7Mo  https://www.youtube.com/watch?v=4OEl-bbR7Mo}
+2025/11/18 19:03:34 VIDEO FOUND ON: Pubg VIDEO ID: 4OEl-bbR7Mo NUMBER OF VIDEOS IN HASHMAP: 9
+2025/11/18 19:03:34 All yt-dlp workers completed. Starting caption downloads...
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 All caption downloads completed.
+2025/11/18 19:03:34 === ERROR SUMMARY ===
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:1 Channel:Javi Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel:Pubg Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:03:34 Total errors: 3
+2025/11/18 19:03:34   ERROR: 3
+2025/11/18 19:03:34 Application completed successfully.
+2025/11/18 19:48:17 Channel Scraping: 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/18 19:48:17 Channel Scraping: 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/18 19:48:17 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/18 19:48:17 Started - 2 channels to be scraped
+2025/11/18 19:48:29 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/18 19:48:29 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/18 19:48:29 All yt-dlp workers completed. Starting caption downloads...
+2025/11/18 19:48:29 All caption downloads completed.
+2025/11/18 19:48:29 === ERROR SUMMARY ===
+2025/11/18 19:48:29 Total errors: 1
+2025/11/18 19:48:29   ERROR: 1
+2025/11/18 19:48:29 Application Done
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 19:48:29 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:04:58 Channel Scraping: 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/18 20:04:58 Channel Scraping: 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/18 20:04:58 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/18 20:04:58 Started - 2 channels to be scraped
+2025/11/18 20:05:10 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/18 20:05:10 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/18 20:05:10 All yt-dlp workers completed. Starting caption downloads...
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:05:10 All caption downloads completed.
+2025/11/18 20:05:10 === ERROR SUMMARY ===
+2025/11/18 20:05:10 Total errors: 8
+2025/11/18 20:05:10   ERROR: 8
+2025/11/18 20:05:10 Application Done
+2025/11/18 20:06:08 Channel Scraping: 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/18 20:06:08 Channel Scraping: 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/18 20:06:08 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/18 20:06:08 Started - 2 channels to be scraped
+2025/11/18 20:06:20 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/18 20:06:20 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/18 20:06:20 All yt-dlp workers completed. Starting caption downloads...
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 All caption downloads completed.
+2025/11/18 20:06:20 Application Done
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:06:20 [ERROR] Worker:0 Channel: Component:network - Failed to make HTTP request for caption: Get "": unsupported protocol scheme ""
+2025/11/18 20:12:49 Channel Scraping: 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/18 20:12:49 Channel Scraping: 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/18 20:12:49 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/18 20:12:49 Started - 2 channels to be scraped
+2025/11/18 20:13:01 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/18 20:13:01 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/18 20:13:01 All yt-dlp workers completed. Starting caption downloads...
+2025/11/18 20:13:01 All caption downloads completed.
+2025/11/18 20:13:01 Application Done
+2025/11/19 13:50:38 Channel Scraping: 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/19 13:50:38 Channel Scraping: 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/19 13:50:38 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/19 13:50:38 Started - 2 channels to be scraped
+2025/11/19 13:50:51 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/19 13:50:51 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/19 13:50:51 All yt-dlp workers completed. Starting caption downloads...
+2025/11/19 13:50:51 All caption downloads completed.
+2025/11/19 13:50:51 Application Done

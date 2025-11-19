@@ -1,0 +1,91 @@
+package main 
+
+import (
+	"sync"
+    "net/http"
+    "fmt"
+    "log"
+    "os"
+    "io"
+    "time"
+)
+
+type CaptionDownloadManager struct {
+
+	CaptionsToBeDownloaded   			chan *VideoToBeDownloadedResult // c
+	WaitG           					*sync.WaitGroup
+	NumberOfCaptionSRTDownloadWorkers 	int 
+	errorAggregator						*ErrorAggregator
+}
+
+func NewCaptionDownloadManager (errorAggregator *ErrorAggregator) (*CaptionDownloadManager) {
+	return &CaptionDownloadManager{
+		WaitG: 								&sync.WaitGroup{},
+		CaptionsToBeDownloaded:				make(chan *VideoToBeDownloadedResult, 100),
+		NumberOfCaptionSRTDownloadWorkers: 	5,
+		errorAggregator:					errorAggregator,
+	}
+}
+
+func (cdm *CaptionDownloadManager) Start() {
+	for i:=0; i<cdm.NumberOfCaptionSRTDownloadWorkers;i++{
+		cdm.WaitG.Add(1)
+		go cdm.WorkerGetVideoCaptions(i)
+	}
+    cdm.WaitG.Wait()
+}
+
+// I think this one is old an not used 
+func (cdm *CaptionDownloadManager)WorkerGetVideoCaptions(i int)  {
+    // log.Println("SRT Downloader started: ", i)   
+    // defer log.Println("SRT Downloader ended: ", i)
+	defer cdm.WaitG.Done()
+
+    for downloadJob := range cdm.CaptionsToBeDownloaded {
+        cdm.httpRequestGetVideoCaptionsAndSaveToFile(downloadJob)
+        // Errors are already recorded in the function with specific context
+    }
+	
+}
+
+func (cdm *CaptionDownloadManager)httpRequestGetVideoCaptionsAndSaveToFile(video *VideoToBeDownloadedResult) error {
+    
+    resp, err := http.Get(video.Captionurl)
+    if err != nil {
+        cdm.errorAggregator.RecordError(SeverityError, video.WorkerID, video.Channel, video.Originalurl, "network", err, "Failed to make HTTP request for caption")
+        return fmt.Errorf("failed to make request: %w", err)
+    }
+    
+    defer resp.Body.Close()
+    
+    // Check status code
+    if resp.StatusCode != http.StatusOK {
+        err := fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+        cdm.errorAggregator.RecordError(SeverityError, video.WorkerID, video.Channel, video.Originalurl, "network", err, "Unexpected HTTP status code when fetching caption")
+        return err
+    }
+
+    // Use triple underscore delimiter and ISO-8601 style timestamp (filename-safe)
+    timestamp := time.Now().Format("2006-01-02T15-04-05")
+    captionOutputFile ,err := os.Create("output_captions/" + video.Channel + "___" + video.Id + "___" + timestamp) 
+    if err != nil { 
+        cdm.errorAggregator.RecordError(SeverityError, video.WorkerID, video.Channel, video.Originalurl, "file-io", err, "Failed to create caption output file")
+        return err
+    }
+    
+    defer captionOutputFile.Close()
+
+    //this writes the srt meta data from the get request to the output file
+    fmt.Fprintf(captionOutputFile,"%s,%s,%s,%s,%s",video.Channel,video.Id,video.Upload_date,video.Captionurl,video.Originalurl)
+
+    //this writes the actual srt caption content to the output file directory for later consumption     
+    _, err = io.Copy(captionOutputFile, resp.Body)
+    if err != nil { 
+        cdm.errorAggregator.RecordError(SeverityError, video.WorkerID, video.Channel, video.Originalurl, "file-io", err, "Failed to copy caption content to file")
+        return fmt.Errorf("failed to read response: %w", err)
+    }
+    
+    log.Printf("Caption File Written: %s %s\n",video.Channel, video.Originalurl)
+    
+    return nil
+}
