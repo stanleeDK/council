@@ -64,20 +64,19 @@ CommandWorker also has a main event loop, this loop reads from the stdout channe
 
 8 There are two "bridge" channels in the worker function which unblocks the stadout io and stederr io of the yt-dl process. These are housed in child go routines which push stdout and stderro content from yt-dl to the bridge channels; thus not blocking the main routine. The commandworker routine, has it;s child goroutine managgin the stdout to push the output from it's bridge channel to main ressult channel; the main goroutine in main() will read it from the result chanel later
 
-the stderr dosn;t go into the result channel; just print that for the logs later 
+stderr output is captured and logged through the centralized ErrorAggregator using RecordError() 
 
 PATTERN
 1. the waitgroup has a wait function that can be called. the caller of the wait function will block until all of the waitgroup counters go to zero. 
 
 --- 
 
-Robust Production functionality 
+Robust Production functionality
 PROBLEM
-multiple goroutines need to write to the same file, but that could corrupt the file; so I would have needed to add mutex logic which is too much for what I want
+multiple goroutines need to handle errors concurrently without race conditions
 
 SOLUTION
-what do I need to do differently for channels 
-SOLUTION - just have separate error files for each goroutine(channel that is being scraped)
+Use centralized ErrorAggregator with thread-safe RecordError() method. All goroutines send errors to a buffered channel, which is processed by a dedicated error-handling goroutine. This avoids mutex complexity and consolidates all error logging.
 
 
 

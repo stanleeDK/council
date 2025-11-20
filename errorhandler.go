@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"log"
-	"os"
+	// "os"
 	"sync"
 	"time"
 )
@@ -37,8 +37,6 @@ type ErrorAggregator struct {
 	errorChan      chan ErrorRecord
 	done           chan struct{}
 	wg             sync.WaitGroup
-	stderrFiles    map[string]*os.File // Map of channel -> stderr file handle
-	stderrFilesMu  sync.Mutex          // Mutex for stderrFiles map
 }
 
 // NewErrorAggregator creates a new error aggregator
@@ -47,7 +45,6 @@ func NewErrorAggregator() *ErrorAggregator {
 		errors:      make([]ErrorRecord, 0),
 		errorChan:   make(chan ErrorRecord, 100),
 		done:        make(chan struct{}),
-		stderrFiles: make(map[string]*os.File),
 	}
 	
 	// Start the error processing goroutine
@@ -146,72 +143,11 @@ func (ea *ErrorAggregator) GetErrorSummary() map[ErrorSeverity]int {
 }
 
 
-// GetStderrFile gets or creates a stderr log file for a channel (thread-safe)
-// Returns the file handle and any error. Caller should not close the file.
-func (ea *ErrorAggregator) GetStderrFile(channel string) (*os.File, error) {
-	ea.stderrFilesMu.Lock()
-	defer ea.stderrFilesMu.Unlock()
-	
-	// Check if file already exists for this channel
-	if file, exists := ea.stderrFiles[channel]; exists {
-		return file, nil
-	}
-	
-	// Create new file
-	filePath := "logs/error_logs/ERROR LOG FILE -" + channel + "-" + time.Now().Format(time.DateTime)
-	file, err := os.Create(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create stderr log file for channel %s: %w", channel, err)
-	}
-	
-	// Store in map
-	ea.stderrFiles[channel] = file
-	return file, nil
-}
-
-// WriteStderr writes a line to the stderr file for a channel (thread-safe)
-func (ea *ErrorAggregator) WriteStderr(channel, line string) error {
-	file, err := ea.GetStderrFile(channel)
-	if err != nil {
-		return err
-	}
-	
-	_, err = file.WriteString(line + "\n")
-	return err
-}
-
-// CloseStderrFile closes the stderr file for a channel (thread-safe)
-func (ea *ErrorAggregator) CloseStderrFile(channel string) error {
-	ea.stderrFilesMu.Lock()
-	defer ea.stderrFilesMu.Unlock()
-	
-	file, exists := ea.stderrFiles[channel]
-	if !exists {
-		return nil // Already closed or never opened
-	}
-	
-	err := file.Close()
-	delete(ea.stderrFiles, channel)
-	return err
-}
-
-// CloseAllStderrFiles closes all open stderr files (thread-safe)
-func (ea *ErrorAggregator) CloseAllStderrFiles() {
-	ea.stderrFilesMu.Lock()
-	defer ea.stderrFilesMu.Unlock()
-	
-	for channel, file := range ea.stderrFiles {
-		file.Close()
-		delete(ea.stderrFiles, channel)
-	}
-}
-
 // Shutdown gracefully shuts down the error aggregator
 func (ea *ErrorAggregator) Shutdown() {
 	close(ea.done)
 	ea.wg.Wait()
 	close(ea.errorChan)
-	ea.CloseAllStderrFiles()
 }
 
 // PrintSummary prints a summary of all errors

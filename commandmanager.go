@@ -198,7 +198,7 @@ func (cm *CommandManager) CommandWorker(ctx context.Context, results chan<- Vide
 
 		scanner := bufio.NewScanner(stderr)
 
-		//record all errors from stderr (from yt-dlp) to file for diagnosis in event of
+		// Record all errors from stderr (from yt-dlp) to centralized error aggregator
 		for scanner.Scan() {
 			cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel,
 				scrape_vid_config.Url, "yt-dlp", fmt.Errorf(scanner.Text()), "yt-dlp stderr output")

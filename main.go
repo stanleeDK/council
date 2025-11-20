@@ -27,8 +27,8 @@ and another for stderr.
 8. STDOUT - this is the one which will read the output from the yt-dlp process (which is a another command line app seaprate from yours). The output from here
 will go into the results channel but first you need a bridge channel stdoutLines. You send teh output from the json to this channel and when done the yt-dlp itself will close the channel which 
 causes the event loop inside this stdout goroutine to self terminate. The workrer level parent event loop reads from this child channel and puts it into the results channel 
-9. STDERR - this could go to a results channel but instead of that complexity this goroutine simply writes to an err log file, which a new err log file for each video channel. this simplifies
-things by not having to orchestrate this routine with the others. It simply fires and forges.
+9. STDERR - stderr output from yt-dlp is captured and logged through the centralized ErrorAggregator using RecordError().
+This simplifies error tracking by consolidating all errors in one place.
 
 10. MAIN WORKER EVENT LOOP Meanwhile back in the main worker goroutine you have an event loop (which manifest itself as a for select loop) which will read from the stdout bridge channel. As soon as yt-dlp is done
 it will cause the bridge channel to close, So this goroutines reads from the bridge channel and puts that output into the results channel. Remember other worker peer routines are also putting 
@@ -70,7 +70,7 @@ channel is empty. All in WaitForDeDupingToFinish()
 
 error handling
 1. you want a robust system whereby if one channel / workder causes a fuss, the rest of teh app continues to process the other channels. You do this with a couple of mechanislm
-2. stderr - this is in a separate goroutine, and all errors can be writtne to a dedicatd log file which can drive alerting later 
+2. stderr - errors are captured through the centralized ErrorAggregator which logs all errors with context (severity, channel, component, etc.)
 3. cmd.wiat and start returns errors. The go style is to return error objects that can be nil or not. This pattern is used for external intereactions eg file creation, network ops, db ops etc
 so because you are using exec to launch a new process for yt-dlps, each one can have an error returned. You check that error in the main worker loop (which maps to one yt-dlp processs)
 see the claen up section of the worker func. That will end the gourptine grracefully and (hopefully) also shut down the yt-dlp orocess. 

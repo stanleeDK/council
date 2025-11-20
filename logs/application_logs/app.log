@@ -248,3 +248,12 @@
 2025/11/20 12:09:00 All yt-dlp workers completed. Starting caption downloads...
 2025/11/20 12:09:00 All caption downloads completed.
 2025/11/20 12:09:00 Application Done
+2025/11/20 12:46:29 Channel Scraping: 0 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/20 12:46:29 Channel Scraping: 1 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/20 12:46:29 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/20 12:46:29 Started - 2 channels to be scraped
+2025/11/20 12:46:41 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/20 12:46:41 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/20 12:46:41 All yt-dlp workers completed. Starting caption downloads...
+2025/11/20 12:46:41 All caption downloads completed.
+2025/11/20 12:46:41 Application Done
