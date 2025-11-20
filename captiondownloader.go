@@ -1,4 +1,4 @@
-package main 
+package main
 
 import (
 	"sync"
@@ -8,18 +8,20 @@ import (
     "os"
     "io"
     "time"
+    "context"
 )
 
 type CaptionDownloadManager struct {
-
-	CaptionsToBeDownloaded   			chan *VideoToBeDownloadedResult // c
+	ctx                                 context.Context
+	CaptionsToBeDownloaded   			chan *VideoToBeDownloadedResult
 	WaitG           					*sync.WaitGroup
-	NumberOfCaptionSRTDownloadWorkers 	int 
+	NumberOfCaptionSRTDownloadWorkers 	int
 	errorAggregator						*ErrorAggregator
 }
 
-func NewCaptionDownloadManager (errorAggregator *ErrorAggregator) (*CaptionDownloadManager) {
+func NewCaptionDownloadManager (ctx context.Context, errorAggregator *ErrorAggregator) (*CaptionDownloadManager) {
 	return &CaptionDownloadManager{
+		ctx:                                ctx,
 		WaitG: 								&sync.WaitGroup{},
 		CaptionsToBeDownloaded:				make(chan *VideoToBeDownloadedResult, 100),
 		NumberOfCaptionSRTDownloadWorkers: 	5,
@@ -35,22 +37,39 @@ func (cdm *CaptionDownloadManager) Start() {
     cdm.WaitG.Wait()
 }
 
-// I think this one is old an not used 
 func (cdm *CaptionDownloadManager)WorkerGetVideoCaptions(i int)  {
-    // log.Println("SRT Downloader started: ", i)   
+    // log.Println("SRT Downloader started: ", i)
     // defer log.Println("SRT Downloader ended: ", i)
 	defer cdm.WaitG.Done()
 
-    for downloadJob := range cdm.CaptionsToBeDownloaded {
-        cdm.httpRequestGetVideoCaptionsAndSaveToFile(downloadJob)
-        // Errors are already recorded in the function with specific context
+    for {
+        select {
+        case downloadJob, ok := <-cdm.CaptionsToBeDownloaded:
+            if !ok {
+                // Channel closed, worker can exit
+                return
+            }
+            cdm.httpRequestGetVideoCaptionsAndSaveToFile(downloadJob)
+            // Errors are already recorded in the function with specific context
+
+        case <-cdm.ctx.Done():
+            // Context cancelled - graceful shutdown
+            log.Printf("Caption download worker %d cancelled: %v", i, cdm.ctx.Err())
+            return
+        }
     }
-	
 }
 
 func (cdm *CaptionDownloadManager)httpRequestGetVideoCaptionsAndSaveToFile(video *VideoToBeDownloadedResult) error {
-    
-    resp, err := http.Get(video.Captionurl)
+
+    // Create context-aware HTTP request so it can be cancelled
+    req, err := http.NewRequestWithContext(cdm.ctx, "GET", video.Captionurl, nil)
+    if err != nil {
+        cdm.errorAggregator.RecordError(SeverityError, video.WorkerID, video.Channel, video.Originalurl, "network", err, "Failed to create HTTP request for caption")
+        return fmt.Errorf("failed to create request: %w", err)
+    }
+
+    resp, err := http.DefaultClient.Do(req)
     if err != nil {
         cdm.errorAggregator.RecordError(SeverityError, video.WorkerID, video.Channel, video.Originalurl, "network", err, "Failed to make HTTP request for caption")
         return fmt.Errorf("failed to make request: %w", err)

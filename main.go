@@ -94,7 +94,9 @@ import (
     // "encoding/json"
     "encoding/csv"
     "time"
-    // "context"
+    "context"
+    "os/signal"
+    "syscall"
     // "strconv"
     // "net/http"
     // "strconv"
@@ -147,9 +149,22 @@ func main() {
         log.SetOutput(multiWriter)
     }
     
-    // CENTRALIZED ERROR HANDLING AND LOGGING 
+    // CENTRALIZED ERROR HANDLING AND LOGGING
     errorAggregator := NewErrorAggregator()
     defer errorAggregator.Shutdown()
+
+    // CREATE APPLICATION-WIDE CONTEXT FOR GRACEFUL SHUTDOWN
+    ctx, cancel := context.WithCancel(context.Background())
+    defer cancel() // Ensure context is cancelled on exit
+
+    // HANDLE SHUTDOWN SIGNALS (Ctrl+C, kill, etc.)
+    sigChan := make(chan os.Signal, 1)
+    signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+    go func() {
+        sig := <-sigChan
+        log.Printf("Received shutdown signal: %v. Initiating graceful shutdown...", sig)
+        cancel() // Cancel context - all workers will stop
+    }()
 
     //read the channels and urls from a csv data source and into a slice of structs 
     scrape_commands, err := readCSVToStructs("video_sources.csv")
@@ -159,7 +174,7 @@ func main() {
     }
 
     //create the command manager and seed with the slice of structs, which represent each channel that needs to be scraped
-    manager, err := NewCommandManager("output.txt", scrape_commands, errorAggregator)
+    manager, err := NewCommandManager(ctx, "output.txt", scrape_commands, errorAggregator)
     if err != nil {
         errorAggregator.RecordError(SeverityCritical, -1, "", "", "command-manager", err, "Failed to create command manager")
         // log.Printf("CRITICAL: Failed to create command manager: %v", err)
@@ -189,10 +204,10 @@ func main() {
         // New format: Channel___VideoID___Timestamp
         // Split by triple underscore
         parts := strings.Split(fileName, "___")
-        // if len(parts) != 3 {
-        //     log.Printf("Warning: Unexpected filename format (expected Channel___VideoID___Timestamp): %s", fileName)
-        //     continue
-        // }
+        if len(parts) != 3 {
+            log.Printf("Warning: Unexpected filename format (expected Channel___VideoID___Timestamp): %s", fileName)
+            continue
+        }
 
         videoID := parts[1]
         manager.video_captions[videoID] = VideoToBeDownloadedResult{} // put empty object as you only need the id of the video to dedupe
@@ -204,7 +219,7 @@ func main() {
 
     log.Println("All yt-dlp workers completed. Starting caption downloads...")
 
-    captionDownloader := NewCaptionDownloadManager(errorAggregator)
+    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator)
     manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
     

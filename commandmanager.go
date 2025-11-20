@@ -18,14 +18,13 @@ import (
 
 /*
 this contains all the ytp instances that need to be executed in separate goroutines, the output file details
-the master context and it's cancel function
+the shared context passed from main
 */
 type CommandManager struct {
 	commands        []ChannelToBeScraped
 	outputFile      string   // Path to the single output file
 	outputHandle    *os.File // File handle for writing
 	ctx             context.Context
-	cancel          context.CancelFunc
 	resultChan      chan VideoToBeDownloadedResult // child go routines running yt-dlp will send results to this channel
 	wg              *sync.WaitGroup
 	video_captions  map[string]VideoToBeDownloadedResult //map to hold all historical / previous output and also to hold future output; but only retrieve subtitles for videos not in the historical storage
@@ -34,15 +33,13 @@ type CommandManager struct {
 	// done 			chan struct{} //channel to orchestrate the signalling of the end of the dedupe process to the main
 }
 
-func NewCommandManager(outputFile string, commands []ChannelToBeScraped, errorAggregator *ErrorAggregator) (*CommandManager, error) {
+func NewCommandManager(ctx context.Context, outputFile string, commands []ChannelToBeScraped, errorAggregator *ErrorAggregator) (*CommandManager, error) {
 
-	//top level context for shutting down entire app
-	ctx, cancel := context.WithCancel(context.Background())
+	// Context is now passed in from main - shared across all managers
 
 	// Open output file, the final paramater goversn permissioning of the file at the os level
 	file, err := os.OpenFile(outputFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
 	if err != nil {
-		cancel()                                                      //use the context cancel to stop the app
 		return nil, fmt.Errorf("failed to open output file: %w", err) //fmt.errorf creates an error obj which you can write to a log file later outisde this function
 	}
 
@@ -52,7 +49,6 @@ func NewCommandManager(outputFile string, commands []ChannelToBeScraped, errorAg
 		outputFile:      outputFile,
 		outputHandle:    file,
 		ctx:             ctx,
-		cancel:          cancel,
 		resultChan:      make(chan VideoToBeDownloadedResult, 100),
 		video_captions:  make(map[string]VideoToBeDownloadedResult, 100), //initialize the video map roughly with 100x the number of video channesl in the video_source.csv file
 		errorAggregator: errorAggregator,
@@ -72,22 +68,6 @@ func (cm *CommandManager) Start() {
 		cm.wg.Add(1)
 		go cm.CommandWorker(cm.ctx, cm.resultChan, i, videolisttobescraped)
 	}
-
-	// wait for all the commandworders to finish, and then close the channel which sends a signal back to main()
-	// go func(){
-	//     log.Println("Worker waiting to close result channel STARTING")
-	//     defer log.Println("Worker waiting to close result channel ENDED")
-	//     close(cm.resultChan)
-	//     fmt.Println("closing result chan?")
-
-	// }()
-
-	// go func(){//read from the results channel in this goroutine, as soon as results come in; then place them into a hashmap. ..use empty struct to
-	//     log.Println("Worker DeDupe result channel STARTING")
-	//     defer log.Println("Worker DeDupe result channel ENDED")
-	//     cm.DeDupeResultChanVideos()
-	//     // cm.done <- struct{}{} // signal of the end of the dedupe process to main
-	// }()
 
 	log.Printf("Started - %d channels to be scraped", len(cm.commands))
 }
