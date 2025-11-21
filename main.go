@@ -92,11 +92,11 @@ import (
     "strings"
     "bufio"
     // "encoding/json"
-    "encoding/csv"
+    // "encoding/csv"
     "time"
     "context"
-    "os/signal"
-    "syscall"
+    // "os/signal"
+    // "syscall"
     // "strconv"
     // "net/http"
     // "strconv"
@@ -107,10 +107,14 @@ import (
 )
 
 const videolisttxt      = "output.txt"
-const columbusplaylist  = "https://www.youtube.com/playlist?list=PLF527D6F94123C17B"
-const omahaplaylist     = "https://www.youtube.com/@DOTComm2013"
-const randomVideo       = "https://www.youtube.com/watch?v=Vo8OBoIpXUU"
-const goathamchess      = "https://www.youtube.com/@GothamChess"
+// const columbusplaylist  = "https://www.youtube.com/playlist?list=PLF527D6F94123C17B"
+// const omahaplaylist     = "https://www.youtube.com/@DOTComm2013"
+// const randomVideo       = "https://www.youtube.com/watch?v=Vo8OBoIpXUU"
+// const goathamchess      = "https://www.youtube.com/@GothamChess"
+const numWorkersforChannels = 5
+const listofchannelstoscrape = "video_sources.csv"
+const ratelimitpersec = 0.02 
+const ratelimitburst = 5 
 
 var ytdlp_cookiesparam string   = ""
 var ytdlp_version string        = ""
@@ -136,6 +140,9 @@ func main() {
         ytdlp_version       = "yt-dlp"
     }
 
+
+
+
     // APPLICAITON LEVEL LOGGING SET UP 
     // Write all log.Printlns to the app.log file 
     file, err := os.OpenFile("logs/application_logs/app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -149,32 +156,35 @@ func main() {
         log.SetOutput(multiWriter)
     }
     
-    // CENTRALIZED ERROR HANDLING AND LOGGING
+
+
+    // 1 ---- CENTRALIZED ERROR HANDLING AND LOGGING
     errorAggregator := NewErrorAggregator()
     defer errorAggregator.Shutdown()
 
-    // CREATE APPLICATION-WIDE CONTEXT FOR GRACEFUL SHUTDOWN
+
+
+
+    // 2 ---- CREATE APPLICATION-WIDE CONTEXT FOR GRACEFUL SHUTDOWN
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel() // Ensure context is cancelled on exit
 
-    // HANDLE SHUTDOWN SIGNALS (Ctrl+C, kill, etc.)
-    sigChan := make(chan os.Signal, 1)
-    signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-    go func() {
-        sig := <-sigChan
-        log.Printf("Received shutdown signal: %v. Initiating graceful shutdown...", sig)
-        cancel() // Cancel context - all workers will stop
-    }()
 
-    //read the channels and urls from a csv data source and into a slice of structs 
-    scrape_commands, err := readCSVToStructs("video_sources.csv")
-    if err != nil {
-        log.Printf("Error: %v\n", err)
-        return
-    }
 
-    //create the command manager and seed with the slice of structs, which represent each channel that needs to be scraped
-    manager, err := NewCommandManager(ctx, "output.txt", scrape_commands, errorAggregator)
+
+    // // 3 ---- HANDLE SHUTDOWN SIGNALS (Ctrl+C, kill, etc.)
+    // sigChan := make(chan os.Signal, 1)
+    // signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+    // go func() {
+    //     sig := <-sigChan
+    //     log.Printf("Received shutdown signal: %v. Initiating graceful shutdown...", sig)
+    //     cancel() // Cancel context - all workers will stop
+    // }()
+
+
+
+    // 5 ---- CEATE COMMAND MANAGER FOR SCRAPING USING GOROUTINES - FEED IT THE CHANNELS FROM THE CSV 
+    manager, err := NewCommandManager(ctx, "output.txt",listofchannelstoscrape, errorAggregator,numWorkersforChannels,ratelimitpersec,ratelimitburst)
     if err != nil {
         errorAggregator.RecordError(SeverityCritical, -1, "", "", "command-manager", err, "Failed to create command manager")
         // log.Printf("CRITICAL: Failed to create command manager: %v", err)
@@ -182,11 +192,14 @@ func main() {
         errorAggregator.PrintSummary()
         return
     }
-    for i, record := range manager.commands {
-        log.Println("Channel Scraping:", i, record)
-    }
+    // for record := range manager.commands {
+    //     log.Println("Channel Scraping:", record)
+    // }
 
-    //load up all the captions for videos you already have so you don't download srt caption files for ones you already have 
+
+log.Println("starting")
+
+    // 6 ---- PREVENT DUPLICATES load up all the captions for videos you already have so you don't download srt caption files for ones you already have 
     //right the already downloaded srt caption files are just coming from the file directory 
     dirPath     := "./output_captions"
     files, err  := ioutil.ReadDir(dirPath)
@@ -213,12 +226,18 @@ func main() {
         manager.video_captions[videoID] = VideoToBeDownloadedResult{} // put empty object as you only need the id of the video to dedupe
     }
     log.Println("VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with:" , len(manager.video_captions))
-    // Start the manager
+    
+
+
+
+    // 7 ---- Start the manager
     manager.Start()
     manager.WaitForAllWorkToFinish()
 
     log.Println("All yt-dlp workers completed. Starting caption downloads...")
 
+
+    // 8 ---- START DOWNLOADING CAPTIONS
     captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator)
     manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
@@ -320,44 +339,6 @@ func getVideoListToDownLoadTranscriptsFor() {
     // fmt.Println(videoListHashTable)
 }
 
-func readCSVToStructs(filename string) ([]ChannelToBeScraped, error) {
-    file, err := os.Open(filename)
-    if err != nil {
-        return nil, fmt.Errorf("failed to open file: %w", err)
-    }
-    defer file.Close()
-
-    reader := csv.NewReader(file)
-    
-    // Read all records
-    records, err := reader.ReadAll()
-    if err != nil {
-        return nil, fmt.Errorf("failed to read CSV: %w", err)
-    }
-
-    if len(records) == 0 {
-        return nil, fmt.Errorf("CSV file is empty")
-    }
-
-    var result []ChannelToBeScraped
-
-    // Convert each row to a struct
-    for i := 1; i < len(records); i++ {
-        row := records[i]
-        
-        record := ChannelToBeScraped{
-            Command:    ytdlp_version,
-            Args:       []string{"--dump-json","--no-warnings",ytdlp_cookiesparam, "cookies.txt", row[2]},
-            Platform:   row[0],
-            Channel:    row[1],
-            Url:        row[2],
-            Timeout:    10 * time.Minute,
-        }
-        result = append(result, record)
-    }
-    
-    return result, nil
-}
 
 
 

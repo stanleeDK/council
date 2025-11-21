@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "runtime"
+	"runtime"
 	"context"
 	"fmt"
 	"io"
@@ -11,9 +11,11 @@ import (
 	"sync"
 
 	// "strconv"
+	"encoding/csv"
 	"encoding/json"
-	// "time"
+	"time"
 	"bufio"
+	"golang.org/x/time/rate"
 )
 
 /*
@@ -21,19 +23,22 @@ this contains all the ytp instances that need to be executed in separate gorouti
 the shared context passed from main
 */
 type CommandManager struct {
-	commands        []ChannelToBeScraped
+	ratelimiter		*rate.Limiter 
+	commands        chan ChannelToBeScraped
 	outputFile      string   // Path to the single output file
+	inputFile   	string //path to file of channels to download
 	outputHandle    *os.File // File handle for writing
 	ctx             context.Context
 	resultChan      chan VideoToBeDownloadedResult // child go routines running yt-dlp will send results to this channel
 	wg              *sync.WaitGroup
+	numberofWorkers int
 	video_captions  map[string]VideoToBeDownloadedResult //map to hold all historical / previous output and also to hold future output; but only retrieve subtitles for videos not in the historical storage
-	videoMapMutex   sync.RWMutex                         // Protects concurrent access to video_captions map
-	errorAggregator *ErrorAggregator                     // Centralized error handling
+	videoMapMutex   sync.RWMutex // Protects concurrent access to video_captions map
+	errorAggregator *ErrorAggregator // Centralized error handling
 	// done 			chan struct{} //channel to orchestrate the signalling of the end of the dedupe process to the main
 }
 
-func NewCommandManager(ctx context.Context, outputFile string, commands []ChannelToBeScraped, errorAggregator *ErrorAggregator) (*CommandManager, error) {
+func NewCommandManager(ctx context.Context, outputFile string, inputFile string,errorAggregator *ErrorAggregator, numworkers int, ratelimitpersec float64, ratelimitburst int) (*CommandManager, error) {
 
 	// Context is now passed in from main - shared across all managers
 
@@ -45,8 +50,11 @@ func NewCommandManager(ctx context.Context, outputFile string, commands []Channe
 
 	return &CommandManager{
 		wg:              &sync.WaitGroup{},
-		commands:        commands,
+		ratelimiter: 	 rate.NewLimiter(rate.Limit(ratelimitpersec),ratelimitburst),
+		commands:        make(chan ChannelToBeScraped,100),
+		numberofWorkers: numworkers,
 		outputFile:      outputFile,
+		inputFile:		 inputFile,
 		outputHandle:    file,
 		ctx:             ctx,
 		resultChan:      make(chan VideoToBeDownloadedResult, 100),
@@ -63,23 +71,40 @@ another job to be done is putting all of the json blobs into a hashmap so they c
 */
 func (cm *CommandManager) Start() {
 
-	// Start all commands
-	for i, videolisttobescraped := range cm.commands {
+
+	go cm.readCSVToStructs()
+
+	for i:=0; i<cm.numberofWorkers;i++ {
 		cm.wg.Add(1)
-		go cm.CommandWorker(cm.ctx, cm.resultChan, i, videolisttobescraped)
+		go cm.StartCommandWorkers(i)
+	}
+}
+
+
+func (cm *CommandManager) StartCommandWorkers(workerID int){
+
+	defer cm.wg.Done()
+
+	for youtubechannel := range cm.commands {
+		cm.ratelimiter.Wait(cm.ctx)
+		cm.CommandWorker(workerID,youtubechannel)
 	}
 
-	log.Printf("Started - %d channels to be scraped", len(cm.commands))
+		
+	// go cm.CommandWorker(cm.ctx, cm.resultChan, i, videolisttobescraped)
+	
+
 }
 
 /*
  */
-func (cm *CommandManager) CommandWorker(ctx context.Context, results chan<- VideoToBeDownloadedResult, workerID int, scrape_vid_config ChannelToBeScraped) {
-	// log.Println(/*time.Now().Format("15:04:05.000"),*/scrape_vid_config.Url, " PARENT Worker starting:",workerID,"num of goroutines: ", runtime.NumGoroutine())
-	// defer log.Println(/*time.Now().Format("15:04:05.000"),*/scrape_vid_config.Url, " PARENT Worker ENDED")
-	defer cm.wg.Done()
+func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- VideoToBeDownloadedResult,*/ workerID int, scrape_vid_config ChannelToBeScraped) {
+	
+	log.Println("Command Worker starting:",workerID,"num of goroutines: ", runtime.NumGoroutine(), scrape_vid_config)
+	defer log.Println("Command Worker ending:",workerID,"num of goroutines: ", runtime.NumGoroutine(),scrape_vid_config)
+	// defer cm.wg.Done() --NOT NEEDED?
 
-	cmd := exec.CommandContext(ctx, scrape_vid_config.Command, scrape_vid_config.Args...)
+	cmd := exec.CommandContext(cm.ctx, scrape_vid_config.Command, scrape_vid_config.Args...)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		cm.errorAggregator.RecordError(SeverityError, workerID, scrape_vid_config.Channel,
@@ -184,7 +209,7 @@ func (cm *CommandManager) CommandWorker(ctx context.Context, results chan<- Vide
 			select {
 			case stdoutLines <- output:				
 				// Successfully queued stdout line
-			case <-ctx.Done():
+			case <-cm.ctx.Done():
 				// Context cancelled, stop reading
 				return
 			}
@@ -242,10 +267,10 @@ func (cm *CommandManager) CommandWorker(ctx context.Context, results chan<- Vide
 
 			}
 			// log.Println(cm.video_captions, len(cm.video_captions))
-			results <- ytldlpresult
-		case <-ctx.Done():
+			cm.resultChan <- ytldlpresult
+		case <-cm.ctx.Done():
 			// Context cancelled - kill command and cleanup
-			cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel, scrape_vid_config.Url, "yt-dlp", ctx.Err(), "Context cancelled, terminating worker")
+			cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel, scrape_vid_config.Url, "yt-dlp", cm.ctx.Err(), "Context cancelled, terminating worker")
 			if cmd.Process != nil {
 				cmd.Process.Kill()
 			}
@@ -284,3 +309,40 @@ func (cm *CommandManager) makeResultsInHashMapAvailableToParameterChannel(srtVid
 	close(srtVideoFilesToDownload)
 
 }
+
+
+func (cm *CommandManager) readCSVToStructs()  {
+    file, err := os.Open(cm.inputFile)
+    if err != nil {
+		cm.errorAggregator.RecordError(SeverityError, 0, "",
+		"", "reading csv", err, "Failed to read videosources.csv")
+		return
+    }
+    defer file.Close()
+
+    reader := csv.NewReader(file)    
+    // Read all records
+    records, err := reader.ReadAll()
+
+    
+
+    // Convert each row to a struct
+    for i := 1; i < len(records); i++ {
+        row := records[i]
+        
+        record := ChannelToBeScraped{
+            Command:    ytdlp_version,
+            Args:       []string{"--dump-json","--no-warnings",ytdlp_cookiesparam, "cookies.txt", row[2]},
+            Platform:   row[0],
+            Channel:    row[1],
+            Url:        row[2],
+            Timeout:    10 * time.Minute,
+        }
+        // result = append(result, record)
+        cm.commands <- record
+    }
+    
+    close(cm.commands)
+    
+}
+

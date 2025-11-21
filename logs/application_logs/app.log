@@ -257,3 +257,156 @@
 2025/11/20 12:46:41 All yt-dlp workers completed. Starting caption downloads...
 2025/11/20 12:46:41 All caption downloads completed.
 2025/11/20 12:46:41 Application Done
+2025/11/21 12:49:48 Received shutdown signal: interrupt. Initiating graceful shutdown...
+2025/11/21 12:59:01 Received shutdown signal: interrupt. Initiating graceful shutdown...
+2025/11/21 13:05:17 starting
+2025/11/21 13:05:25 starting
+2025/11/21 13:05:32 starting
+2025/11/21 13:05:57 starting
+2025/11/21 13:05:57 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 0
+2025/11/21 13:05:57 starting
+2025/11/21 13:05:57 [[PLATFORM_SORUCE  COUNCIL_CITY_SOURCE  CHANNEL_URL] [youtube testchannelthatwillerror https://www.youtube.com/@pubgd] [youtube testchannel https://www.youtube.com/@Blae] [youtube testvid  https://www.youtube.com/@blaq]]
+2025/11/21 13:05:57 0x14000162070
+2025/11/21 13:05:57 Command Worker starting: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 13:05:57 Command Worker starting: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 13:05:57 Command Worker starting: 0 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 13:06:14 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/21 13:06:14 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/21 13:06:14 Command Worker ending: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 13:06:14 Command Worker ending: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 13:06:14 VIDEO FOUND ON: Frank Blaq VIDEO ID: 82kfYPHg87o NUMBER OF VIDEOS IN HASHMAP: 0
+2025/11/21 13:06:16 VIDEO FOUND ON: Frank Blaq VIDEO ID: 8hIZa92wCZA NUMBER OF VIDEOS IN HASHMAP: 1
+2025/11/21 13:06:19 VIDEO FOUND ON: Frank Blaq VIDEO ID: 98UiHTSmLok NUMBER OF VIDEOS IN HASHMAP: 2
+2025/11/21 13:06:21 VIDEO FOUND ON: Frank Blaq VIDEO ID: xNtSbsfZfFs NUMBER OF VIDEOS IN HASHMAP: 3
+2025/11/21 13:06:23 VIDEO FOUND ON: Frank Blaq VIDEO ID: InO3Q6Y_zHI NUMBER OF VIDEOS IN HASHMAP: 4
+2025/11/21 13:06:25 VIDEO FOUND ON: Frank Blaq VIDEO ID: MrQhJMZMX30 NUMBER OF VIDEOS IN HASHMAP: 5
+2025/11/21 13:06:27 VIDEO FOUND ON: Frank Blaq VIDEO ID: rmdv1M_Lat0 NUMBER OF VIDEOS IN HASHMAP: 6
+2025/11/21 13:06:29 VIDEO FOUND ON: Frank Blaq VIDEO ID: BH_r7kJhp-0 NUMBER OF VIDEOS IN HASHMAP: 7
+2025/11/21 13:06:29 Command Worker ending: 0 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 13:06:29 All yt-dlp workers completed. Starting caption downloads...
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=82kfYPHg87o
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=98UiHTSmLok
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=MrQhJMZMX30
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=8hIZa92wCZA
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/shorts/rmdv1M_Lat0
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=InO3Q6Y_zHI
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=xNtSbsfZfFs
+2025/11/21 13:06:29 Caption File Written: Frank Blaq https://www.youtube.com/shorts/BH_r7kJhp-0
+2025/11/21 13:06:29 All caption downloads completed.
+2025/11/21 13:06:29 Application Done
+2025/11/21 13:07:41 starting
+2025/11/21 13:07:41 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/21 13:07:41 starting
+2025/11/21 13:07:41 [[PLATFORM_SORUCE  COUNCIL_CITY_SOURCE  CHANNEL_URL] [youtube testchannelthatwillerror https://www.youtube.com/@pubgd] [youtube testchannel https://www.youtube.com/@Blae] [youtube testvid  https://www.youtube.com/@blaq]]
+2025/11/21 13:07:41 0x140000e2070
+2025/11/21 13:07:41 Command Worker starting: 1 num of goroutines:  6 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 13:07:41 Command Worker starting: 4 num of goroutines:  6 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 13:07:41 Command Worker starting: 0 num of goroutines:  6 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 13:07:58 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/21 13:07:58 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/21 13:07:58 Command Worker ending: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 13:07:58 Command Worker ending: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 13:08:14 Command Worker ending: 0 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 13:08:14 All yt-dlp workers completed. Starting caption downloads...
+2025/11/21 13:08:14 All caption downloads completed.
+2025/11/21 13:08:14 Application Done
+2025/11/21 13:11:09 starting
+2025/11/21 13:11:09 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/11/21 13:11:09 Command Worker starting: 0 num of goroutines:  6 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 13:11:09 Command Worker starting: 4 num of goroutines:  6 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 13:11:09 Command Worker starting: 1 num of goroutines:  6 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 13:11:26 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/21 13:11:26 Command Worker ending: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 13:11:26 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/21 13:11:26 Command Worker ending: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 13:11:41 Command Worker ending: 0 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 13:11:41 All yt-dlp workers completed. Starting caption downloads...
+2025/11/21 13:11:41 All caption downloads completed.
+2025/11/21 13:11:41 Application Done
+2025/11/21 15:10:38 starting
+2025/11/21 15:10:38 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 0
+2025/11/21 15:10:38 Command Worker starting: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 15:10:38 Command Worker starting: 0 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 15:10:38 Command Worker starting: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 15:10:55 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/21 15:10:55 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/21 15:10:55 Command Worker ending: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 15:10:55 Command Worker ending: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 15:10:55 VIDEO FOUND ON: Frank Blaq VIDEO ID: 82kfYPHg87o NUMBER OF VIDEOS IN HASHMAP: 0
+2025/11/21 15:10:57 VIDEO FOUND ON: Frank Blaq VIDEO ID: 8hIZa92wCZA NUMBER OF VIDEOS IN HASHMAP: 1
+2025/11/21 15:10:59 VIDEO FOUND ON: Frank Blaq VIDEO ID: 98UiHTSmLok NUMBER OF VIDEOS IN HASHMAP: 2
+2025/11/21 15:11:01 VIDEO FOUND ON: Frank Blaq VIDEO ID: xNtSbsfZfFs NUMBER OF VIDEOS IN HASHMAP: 3
+2025/11/21 15:11:03 VIDEO FOUND ON: Frank Blaq VIDEO ID: InO3Q6Y_zHI NUMBER OF VIDEOS IN HASHMAP: 4
+2025/11/21 15:11:05 VIDEO FOUND ON: Frank Blaq VIDEO ID: MrQhJMZMX30 NUMBER OF VIDEOS IN HASHMAP: 5
+2025/11/21 15:11:07 VIDEO FOUND ON: Frank Blaq VIDEO ID: rmdv1M_Lat0 NUMBER OF VIDEOS IN HASHMAP: 6
+2025/11/21 15:11:09 VIDEO FOUND ON: Frank Blaq VIDEO ID: BH_r7kJhp-0 NUMBER OF VIDEOS IN HASHMAP: 7
+2025/11/21 15:11:09 Command Worker ending: 0 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 15:11:09 All yt-dlp workers completed. Starting caption downloads...
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=82kfYPHg87o
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=MrQhJMZMX30
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/shorts/BH_r7kJhp-0
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=xNtSbsfZfFs
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=98UiHTSmLok
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/shorts/rmdv1M_Lat0
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=8hIZa92wCZA
+2025/11/21 15:11:09 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=InO3Q6Y_zHI
+2025/11/21 15:11:09 All caption downloads completed.
+2025/11/21 15:11:09 Application Done
+2025/11/21 15:15:57 starting
+2025/11/21 15:15:57 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 0
+2025/11/21 15:15:57 Command Worker starting: 1 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 15:15:57 Command Worker starting: 0 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 15:15:57 Command Worker starting: 2 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 15:16:14 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/21 15:16:14 Command Worker ending: 2 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 15:16:14 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/21 15:16:14 Command Worker ending: 0 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 15:16:15 VIDEO FOUND ON: Frank Blaq VIDEO ID: 82kfYPHg87o NUMBER OF VIDEOS IN HASHMAP: 0
+2025/11/21 15:16:16 VIDEO FOUND ON: Frank Blaq VIDEO ID: 8hIZa92wCZA NUMBER OF VIDEOS IN HASHMAP: 1
+2025/11/21 15:16:18 VIDEO FOUND ON: Frank Blaq VIDEO ID: 98UiHTSmLok NUMBER OF VIDEOS IN HASHMAP: 2
+2025/11/21 15:16:20 VIDEO FOUND ON: Frank Blaq VIDEO ID: xNtSbsfZfFs NUMBER OF VIDEOS IN HASHMAP: 3
+2025/11/21 15:16:22 VIDEO FOUND ON: Frank Blaq VIDEO ID: InO3Q6Y_zHI NUMBER OF VIDEOS IN HASHMAP: 4
+2025/11/21 15:16:24 VIDEO FOUND ON: Frank Blaq VIDEO ID: MrQhJMZMX30 NUMBER OF VIDEOS IN HASHMAP: 5
+2025/11/21 15:16:26 VIDEO FOUND ON: Frank Blaq VIDEO ID: rmdv1M_Lat0 NUMBER OF VIDEOS IN HASHMAP: 6
+2025/11/21 15:16:28 VIDEO FOUND ON: Frank Blaq VIDEO ID: BH_r7kJhp-0 NUMBER OF VIDEOS IN HASHMAP: 7
+2025/11/21 15:16:28 Command Worker ending: 1 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 15:16:28 All yt-dlp workers completed. Starting caption downloads...
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=InO3Q6Y_zHI
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=98UiHTSmLok
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=8hIZa92wCZA
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=MrQhJMZMX30
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=xNtSbsfZfFs
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/shorts/rmdv1M_Lat0
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=82kfYPHg87o
+2025/11/21 15:16:28 Caption File Written: Frank Blaq https://www.youtube.com/shorts/BH_r7kJhp-0
+2025/11/21 15:16:28 All caption downloads completed.
+2025/11/21 15:16:28 Application Done
+2025/11/21 15:16:49 starting
+2025/11/21 15:16:49 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 0
+2025/11/21 15:16:49 Command Worker starting: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 15:16:49 Command Worker starting: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 15:16:49 Command Worker starting: 2 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 15:17:06 Video has no captions: ogoRoV88Sb0 Javi
+2025/11/21 15:17:06 Video has no captions: 4OEl-bbR7Mo Pubg
+2025/11/21 15:17:06 Command Worker ending: 1 num of goroutines:  5 {youtube testchannel https://www.youtube.com/@Blae yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@Blae] 10m0s}
+2025/11/21 15:17:06 Command Worker ending: 4 num of goroutines:  5 {youtube testchannelthatwillerror https://www.youtube.com/@pubgd yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt https://www.youtube.com/@pubgd] 10m0s}
+2025/11/21 15:17:06 VIDEO FOUND ON: Frank Blaq VIDEO ID: 82kfYPHg87o NUMBER OF VIDEOS IN HASHMAP: 0
+2025/11/21 15:17:08 VIDEO FOUND ON: Frank Blaq VIDEO ID: 8hIZa92wCZA NUMBER OF VIDEOS IN HASHMAP: 1
+2025/11/21 15:17:10 VIDEO FOUND ON: Frank Blaq VIDEO ID: 98UiHTSmLok NUMBER OF VIDEOS IN HASHMAP: 2
+2025/11/21 15:17:11 VIDEO FOUND ON: Frank Blaq VIDEO ID: xNtSbsfZfFs NUMBER OF VIDEOS IN HASHMAP: 3
+2025/11/21 15:17:14 VIDEO FOUND ON: Frank Blaq VIDEO ID: InO3Q6Y_zHI NUMBER OF VIDEOS IN HASHMAP: 4
+2025/11/21 15:17:16 VIDEO FOUND ON: Frank Blaq VIDEO ID: MrQhJMZMX30 NUMBER OF VIDEOS IN HASHMAP: 5
+2025/11/21 15:17:18 VIDEO FOUND ON: Frank Blaq VIDEO ID: rmdv1M_Lat0 NUMBER OF VIDEOS IN HASHMAP: 6
+2025/11/21 15:17:20 VIDEO FOUND ON: Frank Blaq VIDEO ID: BH_r7kJhp-0 NUMBER OF VIDEOS IN HASHMAP: 7
+2025/11/21 15:17:20 Command Worker ending: 2 num of goroutines:  5 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 10m0s}
+2025/11/21 15:17:20 All yt-dlp workers completed. Starting caption downloads...
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=82kfYPHg87o
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=98UiHTSmLok
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=xNtSbsfZfFs
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=8hIZa92wCZA
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=InO3Q6Y_zHI
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=MrQhJMZMX30
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/shorts/BH_r7kJhp-0
+2025/11/21 15:17:20 Caption File Written: Frank Blaq https://www.youtube.com/shorts/rmdv1M_Lat0
+2025/11/21 15:17:20 All caption downloads completed.
+2025/11/21 15:17:20 Application Done
