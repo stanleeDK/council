@@ -238,7 +238,7 @@ log.Println("starting")
 
 
     // 8 ---- START DOWNLOADING CAPTIONS
-    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator)
+    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator,numWorkersforChannels,ratelimitpersec,ratelimitburst)
     manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
     

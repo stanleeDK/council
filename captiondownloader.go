@@ -9,9 +9,11 @@ import (
     "io"
     "time"
     "context"
+    "golang.org/x/time/rate"
 )
 
 type CaptionDownloadManager struct {
+    ratelimiter                         *rate.Limiter 
 	ctx                                 context.Context
 	CaptionsToBeDownloaded   			chan *VideoToBeDownloadedResult
 	WaitG           					*sync.WaitGroup
@@ -19,12 +21,13 @@ type CaptionDownloadManager struct {
 	errorAggregator						*ErrorAggregator
 }
 
-func NewCaptionDownloadManager (ctx context.Context, errorAggregator *ErrorAggregator) (*CaptionDownloadManager) {
+func NewCaptionDownloadManager (ctx context.Context, errorAggregator *ErrorAggregator, numworkers int, ratelimitpersec float64, ratelimitburst int) (*CaptionDownloadManager) {
 	return &CaptionDownloadManager{
-		ctx:                                ctx,
+		ratelimiter:                        rate.NewLimiter(rate.Limit(ratelimitpersec),ratelimitburst),
+        ctx:                                ctx,
 		WaitG: 								&sync.WaitGroup{},
 		CaptionsToBeDownloaded:				make(chan *VideoToBeDownloadedResult, 100),
-		NumberOfCaptionSRTDownloadWorkers: 	5,
+		NumberOfCaptionSRTDownloadWorkers: 	numworkers,
 		errorAggregator:					errorAggregator,
 	}
 }
@@ -49,6 +52,7 @@ func (cdm *CaptionDownloadManager)WorkerGetVideoCaptions(i int)  {
                 // Channel closed, worker can exit
                 return
             }
+            cdm.ratelimiter.Wait(cdm.ctx)
             cdm.httpRequestGetVideoCaptionsAndSaveToFile(downloadJob)
             // Errors are already recorded in the function with specific context
 
