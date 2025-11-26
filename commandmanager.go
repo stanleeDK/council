@@ -23,11 +23,9 @@ this contains all the ytp instances that need to be executed in separate gorouti
 the shared context passed from main
 */
 type CommandManager struct {
-	ratelimiter		*rate.Limiter 
+	ratelimiter		*rate.Limiter
 	commands        chan ChannelToBeScraped
-	outputFile      string   // Path to the single output file
 	inputFile   	string //path to file of channels to download
-	outputHandle    *os.File // File handle for writing
 	ctx             context.Context
 	resultChan      chan VideoToBeDownloadedResult // child go routines running yt-dlp will send results to this channel
 	wg              *sync.WaitGroup
@@ -38,24 +36,14 @@ type CommandManager struct {
 	// done 			chan struct{} //channel to orchestrate the signalling of the end of the dedupe process to the main
 }
 
-func NewCommandManager(ctx context.Context, outputFile string, inputFile string,errorAggregator *ErrorAggregator, numworkers int, ratelimitpersec float64, ratelimitburst int) (*CommandManager, error) {
-
-	// Context is now passed in from main - shared across all managers
-
-	// Open output file, the final paramater goversn permissioning of the file at the os level
-	file, err := os.OpenFile(outputFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open output file: %w", err) //fmt.errorf creates an error obj which you can write to a log file later outisde this function
-	}
+func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *ErrorAggregator, numworkers int, ratelimitpersec float64, ratelimitburst int) (*CommandManager, error) {
 
 	return &CommandManager{
 		wg:              &sync.WaitGroup{},
 		ratelimiter: 	 rate.NewLimiter(rate.Limit(ratelimitpersec),ratelimitburst),
 		commands:        make(chan ChannelToBeScraped,100),
 		numberofWorkers: numworkers,
-		outputFile:      outputFile,
 		inputFile:		 inputFile,
-		outputHandle:    file,
 		ctx:             ctx,
 		resultChan:      make(chan VideoToBeDownloadedResult, 100),
 		video_captions:  make(map[string]VideoToBeDownloadedResult, 100), //initialize the video map roughly with 100x the number of video channesl in the video_source.csv file

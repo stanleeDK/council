@@ -90,7 +90,7 @@ import (
 	"log"
     // "bytes"
     "strings"
-    "bufio"
+    // "bufio"
     // "encoding/json"
     // "encoding/csv"
     "time"
@@ -106,7 +106,6 @@ import (
 
 )
 
-const videolisttxt      = "output.txt"
 // const columbusplaylist  = "https://www.youtube.com/playlist?list=PLF527D6F94123C17B"
 // const omahaplaylist     = "https://www.youtube.com/@DOTComm2013"
 // const randomVideo       = "https://www.youtube.com/watch?v=Vo8OBoIpXUU"
@@ -183,8 +182,8 @@ func main() {
 
 
 
-    // 5 ---- CEATE COMMAND MANAGER FOR SCRAPING USING GOROUTINES - FEED IT THE CHANNELS FROM THE CSV 
-    manager, err := NewCommandManager(ctx, "output.txt",listofchannelstoscrape, errorAggregator,numWorkersforChannels,ratelimitpersec,ratelimitburst)
+    // 5 ---- CEATE COMMAND MANAGER FOR SCRAPING USING GOROUTINES - FEED IT THE CHANNELS FROM THE CSV
+    manager, err := NewCommandManager(ctx, listofchannelstoscrape, errorAggregator,numWorkersforChannels,ratelimitpersec,ratelimitburst)
     if err != nil {
         errorAggregator.RecordError(SeverityCritical, -1, "", "", "command-manager", err, "Failed to create command manager")
         // log.Printf("CRITICAL: Failed to create command manager: %v", err)
@@ -315,29 +314,30 @@ func debugGoroutines() {
 
 
 
-func getVideoListToDownLoadTranscriptsFor() {
-    // Open the CSV file
-    file, err := os.Open(videolisttxt)
-    if err != nil { log.Fatal(err)}
-    defer file.Close()
+// OBSOLETE - references deleted videolisttxt constant
+// func getVideoListToDownLoadTranscriptsFor() {
+//     // Open the CSV file
+//     file, err := os.Open(videolisttxt)
+//     if err != nil { log.Fatal(err)}
+//     defer file.Close()
 
-    scanner := bufio.NewScanner(file)
+//     scanner := bufio.NewScanner(file)
 
-    // Initialize the hashtable (map) to store the data
-    videoListHashTable := make(map[string]string)
+//     // Initialize the hashtable (map) to store the data
+//     videoListHashTable := make(map[string]string)
 
-    for scanner.Scan() {
-            line := scanner.Text()
-            fields := strings.Split(line, ";")
+//     for scanner.Scan() {
+//             line := scanner.Text()
+//             fields := strings.Split(line, ";")
 
-            // Assuming column 0 = name and the rest of the columns are stored as value
-            id              := fields[2]
-            videoName       := fields[1]
-            videoListHashTable[id]   = videoName
-    }
+//             // Assuming column 0 = name and the rest of the columns are stored as value
+//             id              := fields[2]
+//             videoName       := fields[1]
+//             videoListHashTable[id]   = videoName
+//     }
 
-    // fmt.Println(videoListHashTable)
-}
+//     // fmt.Println(videoListHashTable)
+// }
 
 
 

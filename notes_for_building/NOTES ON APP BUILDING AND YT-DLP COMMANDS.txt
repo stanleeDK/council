@@ -7,6 +7,11 @@ THIS YT-DLP COMMANDS
 
 YT-DLP tips and tricks: https://www.ditig.com/yt-dlp-cheat-sheet
 
+  yt-dlp_macos --flat-playlist "https://www.youtube.com/@playersplus_jackhunter"  
+yt-dlp_macos --dump-json "https://www.youtube.com/@playersplus_jackhunter"  
+yt-dlp_macos --dump-json --dateafter 20251025 "https://www.youtube.com/@playersplus_jackhunter" 2>/dev/null | grep -o '"upload_date":"[0-9]*"' | cut -d'"' -f4
+
+yt-dlp_macos --dump-json --no-warnings "https://www.youtube.com/@playersplus_jackhunter" 2>/dev/null | grep -o '"upload_date":"[0-9]*"' | cut -d'"' -f4 | head -10
 
 -- CALLS YT TO DOWNLOAD THE JSON AND PASSES IN A COOKIE FILE 
 yt-dlp_macos --cookies "cookies.txt" --dump-json "https://www.youtube.com/@blaq"
