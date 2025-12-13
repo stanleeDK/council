@@ -481,3 +481,77 @@
 2025/11/26 11:09:32 All yt-dlp workers completed. Starting caption downloads...
 2025/11/26 11:09:32 All caption downloads completed.
 2025/11/26 11:09:32 Application Done
+2025/12/10 20:05:19 starting
+2025/12/10 20:05:19 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:07:41 starting
+2025/12/10 20:07:41 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:07:41 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --dateafter false --cookies cookies.txt  https://www.youtube.com/@blaq] 20250820 false}
+2025/12/10 20:07:46 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:07:46 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: Usage: yt-dlp_macos [OPTIONS] URL [URL...]
+2025/12/10 20:07:46 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:07:46 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: yt-dlp_macos: error: no such option: --dateafter false
+2025/12/10 20:07:46 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:07:46 [ERROR] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp command failed: exit status 2
+2025/12/10 20:07:46 All caption downloads completed.
+2025/12/10 20:07:46 Application Done
+2025/12/10 20:08:15 starting
+2025/12/10 20:08:15 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:08:15 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --dateafter 20250820 --cookies cookies.txt  https://www.youtube.com/@blaq] 20250820 false}
+2025/12/10 20:08:21 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:08:21 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: Usage: yt-dlp_macos [OPTIONS] URL [URL...]
+2025/12/10 20:08:21 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:08:21 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: yt-dlp_macos: error: no such option: --dateafter 20250820
+2025/12/10 20:08:21 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:08:21 [ERROR] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp command failed: exit status 2
+2025/12/10 20:08:21 All caption downloads completed.
+2025/12/10 20:08:21 Application Done
+2025/12/10 20:10:14 starting
+2025/12/10 20:10:14 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:10:14 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --dateafter 20250820 --cookies cookies.txt  https://www.youtube.com/@blaq] 20250820 false}
+2025/12/10 20:10:20 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:10:20 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: Usage: yt-dlp_macos [OPTIONS] URL [URL...]
+2025/12/10 20:10:20 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:10:20 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: yt-dlp_macos: error: no such option: --dateafter 20250820
+2025/12/10 20:10:20 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:10:20 [ERROR] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp command failed: exit status 2
+2025/12/10 20:10:20 All caption downloads completed.
+2025/12/10 20:10:20 Application Done
+2025/12/10 20:12:09 starting
+2025/12/10 20:12:09 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:12:09 --dateafter 20250820
+2025/12/10 20:12:09 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --dateafter 20250820 --cookies cookies.txt  https://www.youtube.com/@blaq] 20250820 false}
+2025/12/10 20:12:14 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:12:14 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: Usage: yt-dlp_macos [OPTIONS] URL [URL...]
+2025/12/10 20:12:14 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:12:14 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: yt-dlp_macos: error: no such option: --dateafter 20250820
+2025/12/10 20:12:14 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:12:14 [ERROR] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp command failed: exit status 2
+2025/12/10 20:12:14 All caption downloads completed.
+2025/12/10 20:12:14 Application Done
+2025/12/10 20:12:32 starting
+2025/12/10 20:12:32 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:12:32 --dateafter 20250820
+2025/12/10 20:12:32 {youtube testvid  https://www.youtube.com/@blaq yt-dlp_macos [--dump-json --no-warnings --cookies cookies.txt  https://www.youtube.com/@blaq] 20250820 false}
+2025/12/10 20:12:54 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:12:54 All caption downloads completed.
+2025/12/10 20:12:54 Application Done
+2025/12/10 20:17:19 starting
+2025/12/10 20:17:19 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 8
+2025/12/10 20:17:19 --dateafter 20250820
+2025/12/10 20:17:25 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:17:25 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: Usage: yt-dlp_macos [OPTIONS] URL [URL...]
+2025/12/10 20:17:25 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: 
+2025/12/10 20:17:25 [WARNING] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp stderr output: yt-dlp_macos: error: no such option: --dateafter 20250820
+2025/12/10 20:17:25 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:17:25 [ERROR] Worker:4 Channel:testvid Component:yt-dlp - yt-dlp command failed: exit status 2
+2025/12/10 20:17:25 All caption downloads completed.
+2025/12/10 20:17:25 Application Done
+2025/12/10 20:23:50 starting
+2025/12/10 20:23:50 VIDEOS WITH CAPTIONS ALREADY DOWNLOADED. HASHMAP SEEDED FROM output_captions with: 0
+2025/12/10 20:23:59 VIDEO FOUND ON: Frank Blaq VIDEO ID: 82kfYPHg87o NUMBER OF VIDEOS IN HASHMAP: 0
+2025/12/10 20:24:10 VIDEO FOUND ON: Frank Blaq VIDEO ID: rmdv1M_Lat0 NUMBER OF VIDEOS IN HASHMAP: 1
+2025/12/10 20:24:12 All yt-dlp workers completed. Starting caption downloads...
+2025/12/10 20:24:12 Caption File Written: Frank Blaq https://www.youtube.com/watch?v=82kfYPHg87o
+2025/12/10 20:24:12 Caption File Written: Frank Blaq https://www.youtube.com/shorts/rmdv1M_Lat0
+2025/12/10 20:24:12 All caption downloads completed.
+2025/12/10 20:24:12 Application Done

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"runtime"
+	// "runtimgoe"
 	"context"
 	"fmt"
 	"io"
@@ -9,7 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"sync"
-
+	// "strings"
 	// "strconv"
 	"encoding/csv"
 	"encoding/json"
@@ -53,12 +53,10 @@ func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *E
 
 /*
 this is kind of the orhestrator of all the command and jobs to be done
-Launch each yt-dlp command in their own go routines. They're all housed in the CommandManager
-have a separate go routine to wait for them all to finish and when they're done close the channel
-another job to be done is putting all of the json blobs into a hashmap so they can be deduped (from there another struct will download srt)
+Have a finite set of workers work through all the jobs in the commands channel 
+
 */
 func (cm *CommandManager) Start() {
-
 
 	go cm.readCSVToStructs()
 
@@ -78,19 +76,15 @@ func (cm *CommandManager) StartCommandWorkers(workerID int){
 		cm.CommandWorker(workerID,youtubechannel)
 	}
 
-		
 	// go cm.CommandWorker(cm.ctx, cm.resultChan, i, videolisttobescraped)
-	
-
 }
 
 /*
  */
 func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- VideoToBeDownloadedResult,*/ workerID int, scrape_vid_config ChannelToBeScraped) {
 	
-	log.Println("Command Worker starting:",workerID,"num of goroutines: ", runtime.NumGoroutine(), scrape_vid_config)
-	defer log.Println("Command Worker ending:",workerID,"num of goroutines: ", runtime.NumGoroutine(),scrape_vid_config)
-	// defer cm.wg.Done() --NOT NEEDED?
+	// log.Println("Command Worker starting:",workerID,"num of goroutines: ", runtime.NumGoroutine(), scrape_vid_config)
+	// defer log.Println("Command Worker ending:",workerID,"num of goroutines: ", runtime.NumGoroutine(),scrape_vid_config)
 
 	cmd := exec.CommandContext(cm.ctx, scrape_vid_config.Command, scrape_vid_config.Args...)
 	stdout, err := cmd.StdoutPipe()
@@ -308,27 +302,39 @@ func (cm *CommandManager) readCSVToStructs()  {
     }
     defer file.Close()
 
-    reader := csv.NewReader(file)    
-    // Read all records
-    records, err := reader.ReadAll()
-
-    
+    reader 			:= csv.NewReader(file)
+    records, err 	:= reader.ReadAll()    // Read all records
 
     // Convert each row to a struct
     for i := 1; i < len(records); i++ {
         row := records[i]
-        
-        record := ChannelToBeScraped{
-            Command:    ytdlp_version,
-            Args:       []string{"--dump-json","--no-warnings",ytdlp_cookiesparam, "cookies.txt", row[2]},
-            Platform:   row[0],
-            Channel:    row[1],
-            Url:        row[2],
-            Timeout:    10 * time.Minute,
+
+        // Build the date value for --dateafter parameter
+        var dateValue string
+
+        // row[4] = IsRecentlyAdded; if it's a recently added channel, then you want to scrape up to a year's worth of transcripts + row[6] = IsRecentlyAdded
+        if row[4] == "true" {
+        	// build date parameter where the date is a year ago from today --dateafter 20250820
+        	today 		:= time.Now().Truncate(24 * time.Hour)
+        	oneYearAgo 	:= today.AddDate(-1, 0, 0)
+        	dateValue = oneYearAgo.Format("20060102")
+        } else  { //means row[6] IsRecentlyAdded = false and row[5] YoungestVideoUploaded_at is populated. Only scrape videos younger than the latest one
+        	dateValue = row[3]
         }
-        // result = append(result, record)
+
+        record := ChannelToBeScraped{
+            Platform:   				row[0],
+            Channel:    				row[1],
+            Url:        				row[2],
+            Command:    				ytdlp_version,
+            Args:       				[]string{ytdlpDumpJSON, ytdlpNoWarnings, ytdlpDateAfter, dateValue, ytdlp_cookiesparam, ytdlpCookiesFile, row[2]},
+            YoungestVideoUploaded_at: 	row[3],
+            IsRecentlyAdded: 			row[4],
+        }
+
         cm.commands <- record
     }
+
     
     close(cm.commands)
     

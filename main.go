@@ -83,40 +83,40 @@ package main
 import (
     "runtime"
 	"fmt"
-    // "sync"
-	// "os/exec"
+
     "os"
 	"io"
 	"log"
-    // "bytes"
+    "time"
+    "context"
+    "io/ioutil"
     "strings"
+    // "bytes"
     // "bufio"
     // "encoding/json"
     // "encoding/csv"
-    "time"
-    "context"
     // "os/signal"
     // "syscall"
     // "strconv"
     // "net/http"
     // "strconv"
-    "io/ioutil"
-
+    // "sync"
+    // "os/exec"
     // _ "net/http/pprof" // Import for side effects
-
 )
 
-// const columbusplaylist  = "https://www.youtube.com/playlist?list=PLF527D6F94123C17B"
-// const omahaplaylist     = "https://www.youtube.com/@DOTComm2013"
-// const randomVideo       = "https://www.youtube.com/watch?v=Vo8OBoIpXUU"
-// const goathamchess      = "https://www.youtube.com/@GothamChess"
-const numWorkersforChannels = 5
-const listofchannelstoscrape = "video_sources.csv"
-const ratelimitpersec = 0.02 
-const ratelimitburst = 5 
+const pathOfCaptionsAlreadyDownloaded   = "./output_captions"
+const numWorkersforChannels             = 5
+const listofchannelstoscrape            = "video_sources.csv"
+const ratelimitpersec                   = 0.02
+const ratelimitburst                    = 5
+const ytdlpDumpJSON                     = "--dump-json"
+const ytdlpNoWarnings                   = "--no-warnings"
+const ytdlpCookiesFile                  = "cookies.txt"
+const ytdlp_cookiesparam string         = "--cookies"
+var ytdlpDateAfter string              = "--dateafter"
+var ytdlp_version string                = ""
 
-var ytdlp_cookiesparam string   = ""
-var ytdlp_version string        = ""
 
 func main() {
     // fmt.Printf("Active goroutines: %d\n", runtime.NumGoroutine())
@@ -132,13 +132,12 @@ func main() {
     fmt.Println (environment)
     if (environment == "development") {
         // ytdlp_cookiesparam  = "--cookies-from-browser"
-        ytdlp_cookiesparam  = "--cookies"
+        // ytdlp_cookiesparam  = "--cookies"
         ytdlp_version       = "yt-dlp_macos"
     } else {
-        ytdlp_cookiesparam = "--cookies"
+        // ytdlp_cookiesparam = "--cookies"
         ytdlp_version       = "yt-dlp"
     }
-
 
 
 
@@ -196,15 +195,13 @@ func main() {
     // }
 
 
-log.Println("starting")
+    log.Println("starting")
 
     // 6 ---- PREVENT DUPLICATES load up all the captions for videos you already have so you don't download srt caption files for ones you already have 
     //right the already downloaded srt caption files are just coming from the file directory 
-    dirPath     := "./output_captions"
-    files, err  := ioutil.ReadDir(dirPath)
+    files, err  := ioutil.ReadDir(pathOfCaptionsAlreadyDownloaded)
     if err != nil {
         errorAggregator.RecordError(SeverityWarning, -1, "", "", "file-io", err, "Failed to read output_captions directory - continuing without deduplication")
-        // log.Printf("Warning: Failed to read output_captions directory: %v", err)
     }
 
     for _, file := range files {
@@ -212,9 +209,7 @@ log.Println("starting")
         if fileName == ".DS_Store" {
             continue
         }
-
-        // New format: Channel___VideoID___Timestamp
-        // Split by triple underscore
+        // File name format: "Channel___VideoID___Timestamp"
         parts := strings.Split(fileName, "___")
         if len(parts) != 3 {
             log.Printf("Warning: Unexpected filename format (expected Channel___VideoID___Timestamp): %s", fileName)

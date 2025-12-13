@@ -1,17 +1,31 @@
-youtube,santa_monica_ca,https://www.youtube.com/@Citytv16santamonica
-youtube,gotham_chess, https://www.youtube.com/@GothamChessBLAH
-youtube,testvid, https://www.youtube.com/@blaq
+youtube,santa_monica_ca,https://www.youtube.com/@Citytv16santamonica,,
+youtube,gotham_chess, https://www.youtube.com/@GothamChessBLAH,,
+youtube,testvid, https://www.youtube.com/@blaq,,
+youtube,testchannelthatwillerror,https://www.youtube.com/@pubgd,,
+youtube,testchannel,https://www.youtube.com/@Blae,,
+
 
 THIS YT-DLP COMMANDS
 ------------------------------------------------------------
 
+  yt-dlp_macos --flat-playlist "https://www.youtube.com/playlist?list=PLPzXMXvnx1JsRhW9Ak2TgwbAL2AX_nPG4"
+
+yt-dlp_macos --dump-json "https://www.youtube.com/@OfficialCityOfKenosha/streams" > metadata.txt
+yt-dlp_macos --dump-json https://www.youtube.com/@OfficialCityOfKenosha > metadata.txt
+  yt-dlp_macos --flat-playlist https://www.youtube.com/@OfficialCityOfKenosha > metadata.txt
+yt-dlp_macos "https://kenosha.granicus.com/MediaPlayer.php?view_id=2&clip_id=7116"
+
 YT-DLP tips and tricks: https://www.ditig.com/yt-dlp-cheat-sheet
+
+
+yt-dlp_macos --dump-json --dateafter 20250820 --print-traffic "https://www.youtube.com/@blaq" > metadata.json 
+yt-dlp_macos --dump-json --dateafter 20251201 "https://www.youtube.com/@playersplus_jackhunter" > metadata.json 
+
+yt-dlp_macos --flat-playlist "https://www.youtube.com/@Citytv16santamonica"
 
   yt-dlp_macos --flat-playlist "https://www.youtube.com/@playersplus_jackhunter"  
 yt-dlp_macos --dump-json "https://www.youtube.com/@playersplus_jackhunter"  
-yt-dlp_macos --dump-json --dateafter 20251025 "https://www.youtube.com/@playersplus_jackhunter" 2>/dev/null | grep -o '"upload_date":"[0-9]*"' | cut -d'"' -f4
 
-yt-dlp_macos --dump-json --no-warnings "https://www.youtube.com/@playersplus_jackhunter" 2>/dev/null | grep -o '"upload_date":"[0-9]*"' | cut -d'"' -f4 | head -10
 
 -- CALLS YT TO DOWNLOAD THE JSON AND PASSES IN A COOKIE FILE 
 yt-dlp_macos --cookies "cookies.txt" --dump-json "https://www.youtube.com/@blaq"

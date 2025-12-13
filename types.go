@@ -1,18 +1,19 @@
 package main
 
-import "time"
+// import "time"
 
 /*
     A struct to hold all info about a channel that will be hit to get a list of videos
 */
 
 type ChannelToBeScraped struct {
-    Platform string
-    Channel string
-    Url string
-    Command string
-    Args    []string
-    Timeout time.Duration // Max time before force kill
+    Platform                        string
+    Channel                         string
+    Url                             string
+    Command                         string
+    Args                            []string
+    YoungestVideoUploaded_at        string 
+    IsRecentlyAdded                 string // "true" or "false" if true then scrape past year of history  
 }
 
 /*
