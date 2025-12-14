@@ -1,6 +1,6 @@
 package main
 
-// import "time"
+import "time"
 
 /*
     A struct to hold all info about a channel that will be hit to get a list of videos
@@ -12,8 +12,8 @@ type ChannelToBeScraped struct {
     Url                             string
     Command                         string
     Args                            []string
-    YoungestVideoUploaded_at        string 
-    IsRecentlyAdded                 string // "true" or "false" if true then scrape past year of history  
+    YoungestVideoUploaded_at        time.Time
+    IsRecentlyAdded                 string // "true" or "false" if true then scrape past year of history
 }
 
 /*
@@ -23,7 +23,7 @@ type ChannelToBeScraped struct {
 type VideoToBeDownloadedResult struct {
     WorkerID int
     Channel     string
-    Upload_date string
+    Upload_date time.Time
     Id          string
     Captionurl  string
     Originalurl string

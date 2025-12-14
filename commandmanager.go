@@ -32,6 +32,7 @@ type CommandManager struct {
 	numberofWorkers int
 	video_captions  map[string]VideoToBeDownloadedResult //map to hold all historical / previous output and also to hold future output; but only retrieve subtitles for videos not in the historical storage
 	videoMapMutex   sync.RWMutex // Protects concurrent access to video_captions map
+	csvUpdateMutex  sync.Mutex   // Protects CSV file updates
 	errorAggregator *ErrorAggregator // Centralized error handling
 	// done 			chan struct{} //channel to orchestrate the signalling of the end of the dedupe process to the main
 }
@@ -86,6 +87,9 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 	// log.Println("Command Worker starting:",workerID,"num of goroutines: ", runtime.NumGoroutine(), scrape_vid_config)
 	// defer log.Println("Command Worker ending:",workerID,"num of goroutines: ", runtime.NumGoroutine(),scrape_vid_config)
 
+	// Track the youngest (most recent) upload date for this channel
+	youngestUploadDate := scrape_vid_config.YoungestVideoUploaded_at
+
 	cmd := exec.CommandContext(cm.ctx, scrape_vid_config.Command, scrape_vid_config.Args...)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -107,6 +111,7 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 			scrape_vid_config.Url, "yt-dlp", err, "Failed to start yt-dlp command")
 		return
 	}
+	log.Printf("[Worker %d] Started command: %s", workerID, cmd.String())
 
 	// Goroutine 1: Read stdout and put it into the stdOutLines Channel (stdout is a blocking I/O)
 	go func() {
@@ -128,12 +133,26 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 			}
 
 			// Safely extract fields with error handling
-			upload_date, ok := obj["upload_date"].(string)
+			upload_date_str, ok := obj["upload_date"].(string)
 			if !ok {
 				cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel,
 					scrape_vid_config.Url, "yt-dlp", nil, "Missing upload_date in JSON")
 				continue
 			}
+
+			upload_date, err := time.Parse("20060102", upload_date_str)
+			if err != nil {
+				cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel,
+					scrape_vid_config.Url, "yt-dlp", err, fmt.Sprintf("Invalid upload_date format: %s", upload_date_str))
+				continue
+			}
+
+			// Update youngest upload date if this video is newer
+			if upload_date.After(youngestUploadDate) {
+				youngestUploadDate = upload_date
+				log.Printf("[Worker %d] New youngest date for channel %s: %s", workerID, scrape_vid_config.Channel, youngestUploadDate.Format("2006-01-02"))
+			}
+
 			id, ok := obj["id"].(string)
 			if !ok {
 				cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel,
@@ -268,6 +287,9 @@ cleanup:
 	} else {
 		// log.Printf("Worker %d finished successfully for channel %s", workerID, scrape_vid_config.Channel)
 	}
+
+	// Persist the youngest upload date back to CSV
+	cm.persistYoungestUploadDate(scrape_vid_config.Channel, youngestUploadDate)
 }
 
 // a blocking function that allows for orchestrating the completion of the concurrent population and deduping of the hashtable
@@ -309,17 +331,25 @@ func (cm *CommandManager) readCSVToStructs()  {
     for i := 1; i < len(records); i++ {
         row := records[i]
 
+        // Parse the youngest video date from CSV
+        youngestDate, err := time.Parse("20060102", row[3])
+        if err != nil {
+            cm.errorAggregator.RecordError(SeverityWarning, 0, row[1], row[2],
+                "csv-parse", err, fmt.Sprintf("Invalid date format in CSV: %s, using zero time", row[3]))
+            youngestDate = time.Time{} // Use zero time as fallback
+        }
+
         // Build the date value for --dateafter parameter
         var dateValue string
 
-        // row[4] = IsRecentlyAdded; if it's a recently added channel, then you want to scrape up to a year's worth of transcripts + row[6] = IsRecentlyAdded
+        // row[4] = IsRecentlyAdded; if it's a recently added channel, then you want to scrape up to a year's worth of transcripts
         if row[4] == "true" {
         	// build date parameter where the date is a year ago from today --dateafter 20250820
         	today 		:= time.Now().Truncate(24 * time.Hour)
         	oneYearAgo 	:= today.AddDate(-1, 0, 0)
         	dateValue = oneYearAgo.Format("20060102")
-        } else  { //means row[6] IsRecentlyAdded = false and row[5] YoungestVideoUploaded_at is populated. Only scrape videos younger than the latest one
-        	dateValue = row[3]
+        } else  { //means IsRecentlyAdded = false and YoungestVideoUploaded_at is populated. Only scrape videos younger than the latest one
+        	dateValue = youngestDate.Format("20060102")
         }
 
         record := ChannelToBeScraped{
@@ -328,15 +358,77 @@ func (cm *CommandManager) readCSVToStructs()  {
             Url:        				row[2],
             Command:    				ytdlp_version,
             Args:       				[]string{ytdlpDumpJSON, ytdlpNoWarnings, ytdlpDateAfter, dateValue, ytdlp_cookiesparam, ytdlpCookiesFile, row[2]},
-            YoungestVideoUploaded_at: 	row[3],
+            YoungestVideoUploaded_at: 	youngestDate,
             IsRecentlyAdded: 			row[4],
         }
 
         cm.commands <- record
     }
 
-    
+
     close(cm.commands)
-    
+
+}
+
+// persistYoungestUploadDate updates the CSV file with the newest upload date for a channel
+func (cm *CommandManager) persistYoungestUploadDate(channelName string, uploadDate time.Time) {
+	cm.csvUpdateMutex.Lock()
+	defer cm.csvUpdateMutex.Unlock()
+
+	// Read the entire CSV file
+	file, err := os.Open(cm.inputFile)
+	if err != nil {
+		log.Printf("Error opening CSV file for update: %v", err)
+		return
+	}
+	defer file.Close()
+
+	reader 		 := csv.NewReader(file)
+	records, err := reader.ReadAll()
+	if err != nil {
+		log.Printf("Error reading CSV file: %v", err)
+		return
+	}
+
+	// Find and update the matching channel row
+	updated := false
+	for i := 1; i < len(records); i++ {
+		row := records[i]
+		if len(row) > 3 && row[1] == channelName {
+			row[4]		= "false" // since videos have been scraped, it's no longer new so you don't want to go back one year and to do that make this false
+			row[3] 		= uploadDate.Format("20060102") // Update column 3 (YOUNGEST_VIDEO_UPLOADED_AT) - convert time.Time to string
+			records[i] 	= row
+			updated 	= true
+			log.Printf("Updated CSV: Channel %s, new date: %s", channelName, uploadDate.Format("2006-01-02"))
+			break
+		}
+	}
+
+	if !updated {
+		log.Printf("Warning: Channel %s not found in CSV, skipping update", channelName)
+		return
+	}
+
+	// Write the updated CSV back to file
+	file.Close() // Close read handle before writing
+
+	writeFile, err := os.Create(cm.inputFile)
+	if err != nil {
+		log.Printf("Error creating CSV file for writing: %v", err)
+		return
+	}
+	defer writeFile.Close()
+
+	writer := csv.NewWriter(writeFile)
+	err = writer.WriteAll(records)
+	if err != nil {
+		log.Printf("Error writing CSV file: %v", err)
+		return
+	}
+	writer.Flush()
+
+	if err := writer.Error(); err != nil {
+		log.Printf("Error flushing CSV writer: %v", err)
+	}
 }
 

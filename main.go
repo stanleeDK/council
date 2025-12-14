@@ -195,7 +195,7 @@ func main() {
     // }
 
 
-    log.Println("starting")
+    log.Println("------------------------- STARTING NEW APP RUN -------------------------")
 
     // 6 ---- PREVENT DUPLICATES load up all the captions for videos you already have so you don't download srt caption files for ones you already have 
     //right the already downloaded srt caption files are just coming from the file directory 
