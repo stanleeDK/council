@@ -1,0 +1,14 @@
+# Build notes - personal documentation
+notes_for_building/
+
+# Sample/test data
+sample_data/
+sampled_data_or_code/
+metadata.txt
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+*.log
