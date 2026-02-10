@@ -6,6 +6,9 @@ sample_data/
 sampled_data_or_code/
 metadata.txt
 
+# Cookies (contains auth tokens)
+cookies.txt
+
 # macOS
 .DS_Store
 
