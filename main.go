@@ -108,8 +108,6 @@ import (
 const pathOfCaptionsAlreadyDownloaded   = "./output_captions"
 const numWorkersforChannels             = 5
 const listofchannelstoscrape            = "video_sources.csv"
-const ratelimitpersec                   = 0.02
-const ratelimitburst                    = 5
 const ytdlpDumpJSON                     = "--dump-json"
 const ytdlpNoWarnings                   = "--no-warnings"
 const ytdlpCookiesFile                  = "cookies.txt"
@@ -182,7 +180,7 @@ func main() {
 
 
     // 5 ---- CEATE COMMAND MANAGER FOR SCRAPING USING GOROUTINES - FEED IT THE CHANNELS FROM THE CSV
-    manager, err := NewCommandManager(ctx, listofchannelstoscrape, errorAggregator,numWorkersforChannels,ratelimitpersec,ratelimitburst)
+    manager, err := NewCommandManager(ctx, listofchannelstoscrape, errorAggregator, numWorkersforChannels)
     if err != nil {
         errorAggregator.RecordError(SeverityCritical, -1, "", "", "command-manager", err, "Failed to create command manager")
         // log.Printf("CRITICAL: Failed to create command manager: %v", err)
@@ -232,7 +230,7 @@ func main() {
 
 
     // 8 ---- START DOWNLOADING CAPTIONS
-    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator,numWorkersforChannels,ratelimitpersec,ratelimitburst)
+    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator, numWorkersforChannels)
     manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
     

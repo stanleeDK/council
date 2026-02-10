@@ -1,2 +1,9 @@
 PLATFORM_SORUCE,COUNCIL_CITY_SOURCE,CHANNEL_URL,YOUNGEST_VIDEO_UPLOADED_AT,IS_RECENTLY_ADDED
-youtube,testvid,https://www.youtube.com/@blaq,20250903,false
+# youtube,testvid,https://www.youtube.com/@blaq,20250903,false
+# youtube,gotham_chess," https://www.youtube.com/@GothamChessBLAH",,
+# youtube,testvid," https://www.youtube.com/@blaq",,
+# youtube,testchannelthatwillerror,https://www.youtube.com/@pubgd,,
+# youtube,testchannel,https://www.youtube.com/@Blae,,
+youtube,citykenosha,https://www.youtube.com/@OfficialCityOfKenosha/streams,20260203,false
+youtube,countykenosha,https://www.youtube.com/playlist?list=PLPzXMXvnx1JsRhW9Ak2TgwbAL2AX_nPG4,20260101,false
+youtube,santa_monica_ca,https://www.youtube.com/@Citytv16santamonica,20260101,false

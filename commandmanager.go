@@ -8,14 +8,13 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	"sync"
-	// "strings"
 	// "strconv"
 	"encoding/csv"
 	"encoding/json"
 	"time"
 	"bufio"
-	"golang.org/x/time/rate"
 )
 
 /*
@@ -23,7 +22,6 @@ this contains all the ytp instances that need to be executed in separate gorouti
 the shared context passed from main
 */
 type CommandManager struct {
-	ratelimiter		*rate.Limiter
 	commands        chan ChannelToBeScraped
 	inputFile   	string //path to file of channels to download
 	ctx             context.Context
@@ -37,11 +35,10 @@ type CommandManager struct {
 	// done 			chan struct{} //channel to orchestrate the signalling of the end of the dedupe process to the main
 }
 
-func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *ErrorAggregator, numworkers int, ratelimitpersec float64, ratelimitburst int) (*CommandManager, error) {
+func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *ErrorAggregator, numworkers int) (*CommandManager, error) {
 
 	return &CommandManager{
 		wg:              &sync.WaitGroup{},
-		ratelimiter: 	 rate.NewLimiter(rate.Limit(ratelimitpersec),ratelimitburst),
 		commands:        make(chan ChannelToBeScraped,100),
 		numberofWorkers: numworkers,
 		inputFile:		 inputFile,
@@ -73,8 +70,7 @@ func (cm *CommandManager) StartCommandWorkers(workerID int){
 	defer cm.wg.Done()
 
 	for youtubechannel := range cm.commands {
-		cm.ratelimiter.Wait(cm.ctx)
-		cm.CommandWorker(workerID,youtubechannel)
+		cm.CommandWorker(workerID, youtubechannel)
 	}
 
 	// go cm.CommandWorker(cm.ctx, cm.resultChan, i, videolisttobescraped)
@@ -227,7 +223,7 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 		// Record all errors from stderr (from yt-dlp) to centralized error aggregator
 		for scanner.Scan() {
 			cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel,
-				scrape_vid_config.Url, "yt-dlp", fmt.Errorf(scanner.Text()), "yt-dlp stderr output")
+				scrape_vid_config.Url, "yt-dlp", fmt.Errorf("%s", scanner.Text()), "yt-dlp stderr output")
 		}
 
 		// Check for scanner errors
@@ -325,6 +321,7 @@ func (cm *CommandManager) readCSVToStructs()  {
     defer file.Close()
 
     reader 			:= csv.NewReader(file)
+    reader.Comment   = '#' // Skip lines starting with #
     records, err 	:= reader.ReadAll()    // Read all records
 
     // Convert each row to a struct
@@ -384,16 +381,21 @@ func (cm *CommandManager) persistYoungestUploadDate(channelName string, uploadDa
 	defer file.Close()
 
 	reader 		 := csv.NewReader(file)
+	// Note: Don't set reader.Comment here - we need to preserve commented lines when rewriting
 	records, err := reader.ReadAll()
 	if err != nil {
 		log.Printf("Error reading CSV file: %v", err)
 		return
 	}
 
-	// Find and update the matching channel row
+	// Find and update the matching channel row (skip commented rows)
 	updated := false
 	for i := 1; i < len(records); i++ {
 		row := records[i]
+		// Skip commented rows
+		if len(row) > 0 && strings.HasPrefix(row[0], "#") {
+			continue
+		}
 		if len(row) > 3 && row[1] == channelName {
 			row[4]		= "false" // since videos have been scraped, it's no longer new so you don't want to go back one year and to do that make this false
 			row[3] 		= uploadDate.Format("20060102") // Update column 3 (YOUNGEST_VIDEO_UPLOADED_AT) - convert time.Time to string
@@ -432,3 +434,56 @@ func (cm *CommandManager) persistYoungestUploadDate(channelName string, uploadDa
 	}
 }
 
+// this is a testing function to reset the state of video_sources.csv
+// in the event of scraping failures like rate limiting you can go back 
+// to an initial state (because once scraped the youngest_video_uploaded at date changs)
+func (cm *CommandManager) testfunctionToResetCSVDates() {
+	file, err := os.Open(cm.inputFile)
+	if err != nil {
+		log.Printf("Error opening CSV file for reset: %v", err)
+		return
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	records, err := reader.ReadAll()
+	if err != nil {
+		log.Printf("Error reading CSV file: %v", err)
+		return
+	}
+
+	for i := 1; i < len(records); i++ {
+		row := records[i]
+		if len(row) > 0 && strings.HasPrefix(row[0], "#") {
+			continue
+		}
+		if len(row) > 4 {
+			row[3] = "20260101"
+			row[4] = "false"
+			records[i] = row
+		}
+	}
+
+	file.Close()
+
+	writeFile, err := os.Create(cm.inputFile)
+	if err != nil {
+		log.Printf("Error creating CSV file for writing: %v", err)
+		return
+	}
+	defer writeFile.Close()
+
+	writer := csv.NewWriter(writeFile)
+	err = writer.WriteAll(records)
+	if err != nil {
+		log.Printf("Error writing CSV file: %v", err)
+		return
+	}
+	writer.Flush()
+
+	if err := writer.Error(); err != nil {
+		log.Printf("Error flushing CSV writer: %v", err)
+	}
+
+	log.Println("CSV dates reset: all channels set to 20260101, IS_RECENTLY_ADDED set to false")
+}
