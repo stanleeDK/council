@@ -112,6 +112,8 @@ const ytdlpDumpJSON                     = "--dump-json"
 const ytdlpNoWarnings                   = "--no-warnings"
 const ytdlpCookiesFile                  = "cookies.txt"
 const ytdlp_cookiesparam string         = "--cookies"
+const ytdlpJsRuntimes                   = "--js-runtimes"
+const ytdlpJsRuntimesValue              = "node"
 var ytdlpDateAfter string              = "--dateafter"
 var ytdlp_version string                = ""
 
@@ -231,10 +233,15 @@ func main() {
 
     // 8 ---- START DOWNLOADING CAPTIONS
     captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator, numWorkersforChannels)
-    manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
+    // Fill the jobs channel in a goroutine so that the download workers (started by
+    // Start() below) can drain it concurrently. Otherwise, with a buffered channel of
+    // size 100, filling more than 100 jobs before any worker exists would block forever
+    // on the 101st send (e.g. during an IS_RECENTLY_ADDED backfill). The fill goroutine
+    // close()s the channel when done, which signals the workers to exit.
+    go manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
     
-    log.Println("All caption downloads completed.")
+    log.Println("Caption downloads process ended.")
     
     // Print error summary
     // errorAggregator.PrintSummary()

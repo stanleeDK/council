@@ -30,6 +30,7 @@ func NewCaptionDownloadManager(ctx context.Context, errorAggregator *ErrorAggreg
 }
 
 func (cdm *CaptionDownloadManager) Start() {
+    fmt.Println("Number of caption files to be downloaded: ", len(cdm.CaptionsToBeDownloaded))
 	for i:=0; i<cdm.NumberOfCaptionSRTDownloadWorkers;i++{
 		cdm.WaitG.Add(1)
 		go cdm.WorkerGetVideoCaptions(i)

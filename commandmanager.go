@@ -163,6 +163,7 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 			}
 			captions, _ := obj["automatic_captions"].(map[string]interface{})
 			Originalurl, ok := obj["original_url"].(string)
+			fmt.Println(Originalurl)
 			if !ok {
 				cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel,
 					scrape_vid_config.Url, "yt-dlp", nil, "Missing original_url in JSON")
@@ -172,6 +173,7 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 
 			// extract captions if they exist
 			if len(captions) > 0 {
+				fmt.Println("hello")
 				/* jsondump sample
 				   "en": [
 				    {
@@ -354,7 +356,7 @@ func (cm *CommandManager) readCSVToStructs()  {
             Channel:    				row[1],
             Url:        				row[2],
             Command:    				ytdlp_version,
-            Args:       				[]string{ytdlpDumpJSON, ytdlpNoWarnings, ytdlpDateAfter, dateValue, ytdlp_cookiesparam, ytdlpCookiesFile, row[2]},
+            Args:       				[]string{ytdlpDumpJSON, ytdlpNoWarnings, ytdlpDateAfter, dateValue, ytdlp_cookiesparam, ytdlpCookiesFile, ytdlpJsRuntimes, ytdlpJsRuntimesValue, row[2]},
             YoungestVideoUploaded_at: 	youngestDate,
             IsRecentlyAdded: 			row[4],
         }
