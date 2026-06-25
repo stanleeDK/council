@@ -104,7 +104,7 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 	// Start the command
 	if err := cmd.Start(); err != nil {
 		cm.errorAggregator.RecordError(SeverityCritical, workerID, scrape_vid_config.Channel,
-			scrape_vid_config.Url, "yt-dlp", err, "Failed to start yt-dlp command")
+			scrape_vid_config.Url, "yt-dlp", err, "Failed to start yt-dlp command: "+cmd.String())
 		return
 	}
 	log.Printf("[Worker %d] Started command: %s", workerID, cmd.String())
@@ -280,8 +280,9 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 cleanup:
 	// Wait for command to finish and send completion result
 	if err := cmd.Wait(); err != nil {
-		// Actual error - yt-dlp failed
-		cm.errorAggregator.RecordError(SeverityError, workerID, scrape_vid_config.Channel, scrape_vid_config.Url, "yt-dlp", err, "yt-dlp command failed")
+		// Actual error - yt-dlp failed. Include the full command so the failing
+		// invocation can be inspected/re-run from the error log.
+		cm.errorAggregator.RecordError(SeverityError, workerID, scrape_vid_config.Channel, scrape_vid_config.Url, "yt-dlp", err, "yt-dlp command failed: "+cmd.String())
 	} else {
 		// log.Printf("Worker %d finished successfully for channel %s", workerID, scrape_vid_config.Channel)
 	}

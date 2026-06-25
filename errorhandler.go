@@ -3,7 +3,7 @@ package main
 import (
 	// "fmt"
 	"log"
-	// "os"
+	"os"
 	"sync"
 	"time"
 )
@@ -37,6 +37,8 @@ type ErrorAggregator struct {
 	errorChan      chan ErrorRecord
 	done           chan struct{}
 	wg             sync.WaitGroup
+	errorLogFile   *os.File     // dedicated file for ERROR/CRITICAL records (logs/error_logs/errors.log)
+	errorLogger    *log.Logger  // writes the failures-only log; nil if the file couldn't be opened
 }
 
 // NewErrorAggregator creates a new error aggregator
@@ -46,11 +48,21 @@ func NewErrorAggregator() *ErrorAggregator {
 		errorChan:   make(chan ErrorRecord, 100),
 		done:        make(chan struct{}),
 	}
-	
+
+	// Open a dedicated, greppable file containing only the actionable failures
+	// (ERROR/CRITICAL). Best-effort: if it can't be opened we fall back to the
+	// main logger only, so a missing directory/permission never crashes the app.
+	if f, err := os.OpenFile("logs/error_logs/errors.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666); err != nil {
+		log.Printf("WARNING: Failed to open error log file logs/error_logs/errors.log: %v. Errors will still go to the main log.", err)
+	} else {
+		ea.errorLogFile = f
+		ea.errorLogger = log.New(f, "", log.LstdFlags)
+	}
+
 	// Start the error processing goroutine
 	ea.wg.Add(1)
 	go ea.processErrors()
-	
+
 	return ea
 }
 
@@ -114,9 +126,18 @@ func (ea *ErrorAggregator) logError(record ErrorRecord) {
 	if record.Error != nil {
 		errMsg = record.Error.Error()
 	}
-	
-	log.Printf("[%s] Worker:%d Channel:%s Component:%s - %s: %s", 
-		record.Severity, record.WorkerID, record.Channel, record.Component, record.Message, errMsg)
+
+	// Format includes URL so the failed resource (e.g. the video URL for a
+	// caption failure) is captured inline and can be grepped for re-runs.
+	format := "[%s] Worker:%d Channel:%s Component:%s URL:%s - %s: %s"
+	args := []interface{}{record.Severity, record.WorkerID, record.Channel, record.Component, record.URL, record.Message, errMsg}
+
+	log.Printf(format, args...)
+
+	// Mirror actionable failures into the dedicated, failures-only error log.
+	if ea.errorLogger != nil && (record.Severity == SeverityError || record.Severity == SeverityCritical) {
+		ea.errorLogger.Printf(format, args...)
+	}
 }
 
 // GetErrors returns all collected errors (thread-safe)
@@ -148,6 +169,9 @@ func (ea *ErrorAggregator) Shutdown() {
 	close(ea.done)
 	ea.wg.Wait()
 	close(ea.errorChan)
+	if ea.errorLogFile != nil {
+		ea.errorLogFile.Close()
+	}
 }
 
 // PrintSummary prints a summary of all errors

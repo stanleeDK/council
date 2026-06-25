@@ -240,12 +240,15 @@ func main() {
     // close()s the channel when done, which signals the workers to exit.
     go manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
-    
+
     log.Println("Caption downloads process ended.")
-    
+
     // Print error summary
     // errorAggregator.PrintSummary()
-    
+
+    // 9 ---- EMAIL A SUMMARY OF FAILURES (best-effort; no-op without SendGrid env vars)
+    SendFailureReport(errorAggregator)
+
     log.Println("Application Done")
 
 
