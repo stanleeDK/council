@@ -83,6 +83,7 @@ package main
 import (
     "runtime"
 	"fmt"
+    "flag"
 
     "os"
 	"io"
@@ -128,7 +129,12 @@ func main() {
     //     log.Println(http.ListenAndServe("localhost:6060", nil))
     // }()
 
-    environment := os.Getenv("GO_ENV")  
+    // -e enables the post-run summary email (channels/videos/captions + posted
+    // dates). Off by default; flip the default here or pass -e on the CLI.
+    sendRunSummaryEmail := flag.Bool("e", false, "send a run-summary email after the run completes")
+    flag.Parse()
+
+    environment := os.Getenv("GO_ENV")
     fmt.Println (environment)
     if (environment == "development") {
         // ytdlp_cookiesparam  = "--cookies-from-browser"
@@ -160,6 +166,9 @@ func main() {
     errorAggregator := NewErrorAggregator()
     defer errorAggregator.Shutdown()
 
+    // Collects per-run stats (channels/videos/captions) for the summary email.
+    runSummary := NewRunSummary()
+
 
 
 
@@ -182,7 +191,7 @@ func main() {
 
 
     // 5 ---- CEATE COMMAND MANAGER FOR SCRAPING USING GOROUTINES - FEED IT THE CHANNELS FROM THE CSV
-    manager, err := NewCommandManager(ctx, listofchannelstoscrape, errorAggregator, numWorkersforChannels)
+    manager, err := NewCommandManager(ctx, listofchannelstoscrape, errorAggregator, runSummary, numWorkersforChannels)
     if err != nil {
         errorAggregator.RecordError(SeverityCritical, -1, "", "", "command-manager", err, "Failed to create command manager")
         // log.Printf("CRITICAL: Failed to create command manager: %v", err)
@@ -232,7 +241,7 @@ func main() {
 
 
     // 8 ---- START DOWNLOADING CAPTIONS
-    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator, numWorkersforChannels)
+    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator, runSummary, numWorkersforChannels)
     // Fill the jobs channel in a goroutine so that the download workers (started by
     // Start() below) can drain it concurrently. Otherwise, with a buffered channel of
     // size 100, filling more than 100 jobs before any worker exists would block forever
@@ -248,6 +257,11 @@ func main() {
 
     // 9 ---- EMAIL A SUMMARY OF FAILURES (best-effort; no-op without SendGrid env vars)
     SendFailureReport(errorAggregator)
+
+    // 10 ---- EMAIL A RUN SUMMARY (only when -e is passed)
+    if *sendRunSummaryEmail {
+        SendRunSummary(runSummary)
+    }
 
     log.Println("Application Done")
 

@@ -32,10 +32,11 @@ type CommandManager struct {
 	videoMapMutex   sync.RWMutex // Protects concurrent access to video_captions map
 	csvUpdateMutex  sync.Mutex   // Protects CSV file updates
 	errorAggregator *ErrorAggregator // Centralized error handling
+	runSummary      *RunSummary  // Collects per-run stats for the summary email
 	// done 			chan struct{} //channel to orchestrate the signalling of the end of the dedupe process to the main
 }
 
-func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *ErrorAggregator, numworkers int) (*CommandManager, error) {
+func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *ErrorAggregator, runSummary *RunSummary, numworkers int) (*CommandManager, error) {
 
 	return &CommandManager{
 		wg:              &sync.WaitGroup{},
@@ -46,6 +47,7 @@ func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *E
 		resultChan:      make(chan VideoToBeDownloadedResult, 100),
 		video_captions:  make(map[string]VideoToBeDownloadedResult, 100), //initialize the video map roughly with 100x the number of video channesl in the video_source.csv file
 		errorAggregator: errorAggregator,
+		runSummary:      runSummary,
 	}, nil
 }
 
@@ -85,6 +87,8 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 
 	// Track the youngest (most recent) upload date for this channel
 	youngestUploadDate := scrape_vid_config.YoungestVideoUploaded_at
+
+	cm.runSummary.RecordChannelScraped(scrape_vid_config.Channel)
 
 	cmd := exec.CommandContext(cm.ctx, scrape_vid_config.Command, scrape_vid_config.Args...)
 	stdout, err := cmd.StdoutPipe()
@@ -173,7 +177,6 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 
 			// extract captions if they exist
 			if len(captions) > 0 {
-				fmt.Println("hello")
 				/* jsondump sample
 				   "en": [
 				    {
@@ -259,6 +262,13 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 						log.Println("VIDEO FOUND ON:", ytldlpresult.Channel, "VIDEO ID:", ytldlpresult.Id, "NUMBER OF VIDEOS IN HASHMAP:", len(cm.video_captions))
 						cm.video_captions[ytldlpresult.Id] = ytldlpresult
 					cm.videoMapMutex.Unlock()
+
+					cm.runSummary.RecordVideoScraped(ScrapedVideo{
+						Channel:    ytldlpresult.Channel,
+						Id:         ytldlpresult.Id,
+						UploadDate: ytldlpresult.Upload_date,
+						Url:        ytldlpresult.Originalurl,
+					})
 
 				} else {
 					log.Println("Video has no captions:", ytldlpresult.Id,ytldlpresult.Channel)	

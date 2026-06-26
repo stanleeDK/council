@@ -38,17 +38,19 @@ type CaptionDownloadManager struct {
 	WaitG           					*sync.WaitGroup
 	NumberOfCaptionSRTDownloadWorkers 	int
 	errorAggregator						*ErrorAggregator
+	runSummary							*RunSummary
 	limiter								*RateLimiter
 	httpClient							*http.Client
 }
 
-func NewCaptionDownloadManager(ctx context.Context, errorAggregator *ErrorAggregator, numworkers int) *CaptionDownloadManager {
+func NewCaptionDownloadManager(ctx context.Context, errorAggregator *ErrorAggregator, runSummary *RunSummary, numworkers int) *CaptionDownloadManager {
 	return &CaptionDownloadManager{
 		ctx:                                ctx,
 		WaitG: 								&sync.WaitGroup{},
 		CaptionsToBeDownloaded:				make(chan *VideoToBeDownloadedResult, 100),
 		NumberOfCaptionSRTDownloadWorkers: 	numworkers,
 		errorAggregator:					errorAggregator,
+		runSummary:							runSummary,
 		limiter:							NewRateLimiter(captionRequestsPerSecond),
 		httpClient:							&http.Client{Timeout: captionHTTPTimeout},
 	}
@@ -167,6 +169,13 @@ func (cdm *CaptionDownloadManager)httpRequestGetVideoCaptionsAndSaveToFile(video
     }
     
     log.Printf("Caption File Written: %s %s\n",video.Channel, video.Originalurl)
+
+    cdm.runSummary.RecordCaptionDownloaded(ScrapedVideo{
+        Channel:    video.Channel,
+        Id:         video.Id,
+        UploadDate: video.Upload_date,
+        Url:        video.Originalurl,
+    })
 
     return nil
 }
