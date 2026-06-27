@@ -26,7 +26,6 @@ type CommandManager struct {
 	commands        chan ChannelToBeScraped
 	inputFile   	string //path to file of channels to download
 	ctx             context.Context
-	resultChan      chan VideoToBeDownloadedResult // child go routines running yt-dlp will send results to this channel
 	wg              *sync.WaitGroup
 	numberofWorkers int
 	video_captions  map[string]VideoToBeDownloadedResult //map to hold all historical / previous output and also to hold future output; but only retrieve subtitles for videos not in the historical storage
@@ -45,7 +44,6 @@ func NewCommandManager(ctx context.Context, inputFile string, errorAggregator *E
 		numberofWorkers: numworkers,
 		inputFile:		 inputFile,
 		ctx:             ctx,
-		resultChan:      make(chan VideoToBeDownloadedResult, 100),
 		video_captions:  make(map[string]VideoToBeDownloadedResult, 100), //initialize the video map roughly with 100x the number of video channesl in the video_source.csv file
 		errorAggregator: errorAggregator,
 		runSummary:      runSummary,
@@ -75,8 +73,6 @@ func (cm *CommandManager) StartCommandWorkers(workerID int){
 	for youtubechannel := range cm.commands {
 		cm.CommandWorker(workerID, youtubechannel)
 	}
-
-	// go cm.CommandWorker(cm.ctx, cm.resultChan, i, videolisttobescraped)
 }
 
 /*
@@ -277,7 +273,6 @@ func (cm *CommandManager) CommandWorker(/*ctx context.Context, results chan<- Vi
 
 			}
 			// log.Println(cm.video_captions, len(cm.video_captions))
-			cm.resultChan <- ytldlpresult
 		case <-cm.ctx.Done():
 			// Context cancelled - kill command and cleanup
 			cm.errorAggregator.RecordError(SeverityWarning, workerID, scrape_vid_config.Channel, scrape_vid_config.Url, "yt-dlp", cm.ctx.Err(), "Context cancelled, terminating worker")
@@ -305,7 +300,6 @@ cleanup:
 // a blocking function that allows for orchestrating the completion of the concurrent population and deduping of the hashtable
 func (cm *CommandManager) WaitForAllWorkToFinish() {
 	cm.wg.Wait()
-	close(cm.resultChan)
 }
 
 func (cm *CommandManager) makeResultsInHashMapAvailableToParameterChannel(srtVideoFilesToDownload chan<- *VideoToBeDownloadedResult) {

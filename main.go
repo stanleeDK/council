@@ -292,56 +292,6 @@ func main() {
     }
 
     log.Println("Application Done")
-
-
-
-    /* this part is to be replaced some how by the DeDupeResultChanVideos() which has another channel "done" to signal completion of deduping process */
-    // this is the main loop where you check the resuls channel. Everytime the workers from CommandWorker() run, 
-    // they insert things into the results channel in their own goroutines. You check the output here. 
-
-    // for {
-    //     select {
-    //     case result, ok := <-manager.resultChan: //read from the results channel as video urls come into the channel from reading youtube  videochannel 
-    //         if ok == false {  // This checks to see if channel is closed 
-    //             log.Println(/*time.Now().Format("15:04:05.000"),*/"Main results channel closed")
-    //             return 
-    //         }
-    //         log.Println(result)
-
-    //         if _, exists := video_captions[result.Id]; exists {
-    //             // video already has subtitles extracted or queue to be extracted; ignore it
-    //             // OPTIMIZATION - COULD WE HAVE A ROLLING WINDOW TO EXCLUDE THIS VIDEO FROM CHANNEL JSON DUMPS? MAYBE HAVE A MOVING TERMINATION DATE
-    //         } else {
-    //             video_captions[result.Id] = result
-
-    //             //1 need to get the captions in goroutine
-    //             //2 write them to a file 
-    //             //3 remove the entry from the map 
-    //             //4 persist vido to map/csv file of all downloaded srts 
-    //             //0 load all downalod
-    //             getCaptionWorkerCounter++
-    //             go func (r VideoToBeDownloadedResult, workerCounterID int) {
-    //                 log.Println(r.Originalurl," : Get Captions GoRoutine Started. Num of Goroutines:", runtime.NumGoroutine(), "SRT Caption WorkerID",workerCounterID)
-    //                 defer log.Println(r.Originalurl," : Get Captions GoRoutine ENDED. Num of Goroutines:", runtime.NumGoroutine(), "SRT Caption WorkerID",workerCounterID)
-
-    //                 err := getVideoCaptionsSaveToFile(r)
-    //                 if err != nil {
-    //                     log.Println("HTTP Get Caption Failed",err)
-    //                 }
-
-    //                 delete(video_captions,r.Id)
-    //             }(result,getCaptionWorkerCounter)
-
-                
-    //         }
-    //     case <- manager.ctx.Done():
-    //         log.Println("main thread done")
-    //         return 
-    //     }
-    // }
-
-    // fmt.Printf("Final goroutine count: %d\n", runtime.NumGoroutine())
-
 }
 
 
