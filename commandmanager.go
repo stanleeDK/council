@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 	// "strconv"
@@ -424,26 +425,36 @@ func (cm *CommandManager) persistYoungestUploadDate(channelName string, uploadDa
 		return
 	}
 
-	// Write the updated CSV back to file
+	// Write the updated CSV back atomically: write to a temp file in the same
+	// directory, then rename it over the original. A rename on the same filesystem
+	// is atomic, so a crash/kill mid-write can never leave a truncated CSV (which
+	// would wipe the channel list and watermarks).
 	file.Close() // Close read handle before writing
 
-	writeFile, err := os.Create(cm.inputFile)
+	tmp, err := os.CreateTemp(filepath.Dir(cm.inputFile), filepath.Base(cm.inputFile)+".tmp-*")
 	if err != nil {
-		log.Printf("Error creating CSV file for writing: %v", err)
+		log.Printf("Error creating temp CSV file for writing: %v", err)
 		return
 	}
-	defer writeFile.Close()
+	tmpName := tmp.Name()
 
-	writer := csv.NewWriter(writeFile)
-	err = writer.WriteAll(records)
-	if err != nil {
-		log.Printf("Error writing CSV file: %v", err)
-		return
-	}
-	writer.Flush()
-
+	writer := csv.NewWriter(tmp)
+	writer.WriteAll(records) // WriteAll flushes internally
 	if err := writer.Error(); err != nil {
-		log.Printf("Error flushing CSV writer: %v", err)
+		log.Printf("Error writing CSV file: %v", err)
+		tmp.Close()
+		os.Remove(tmpName)
+		return
+	}
+	if err := tmp.Close(); err != nil {
+		log.Printf("Error closing temp CSV file: %v", err)
+		os.Remove(tmpName)
+		return
+	}
+	if err := os.Rename(tmpName, cm.inputFile); err != nil {
+		log.Printf("Error replacing CSV file: %v", err)
+		os.Remove(tmpName)
+		return
 	}
 }
 

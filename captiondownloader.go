@@ -39,11 +39,12 @@ type CaptionDownloadManager struct {
 	NumberOfCaptionSRTDownloadWorkers 	int
 	errorAggregator						*ErrorAggregator
 	runSummary							*RunSummary
+	retryWorklist						*RetryWorklist
 	limiter								*RateLimiter
 	httpClient							*http.Client
 }
 
-func NewCaptionDownloadManager(ctx context.Context, errorAggregator *ErrorAggregator, runSummary *RunSummary, numworkers int) *CaptionDownloadManager {
+func NewCaptionDownloadManager(ctx context.Context, errorAggregator *ErrorAggregator, runSummary *RunSummary, retryWorklist *RetryWorklist, numworkers int) *CaptionDownloadManager {
 	return &CaptionDownloadManager{
 		ctx:                                ctx,
 		WaitG: 								&sync.WaitGroup{},
@@ -51,6 +52,7 @@ func NewCaptionDownloadManager(ctx context.Context, errorAggregator *ErrorAggreg
 		NumberOfCaptionSRTDownloadWorkers: 	numworkers,
 		errorAggregator:					errorAggregator,
 		runSummary:							runSummary,
+		retryWorklist:						retryWorklist,
 		limiter:							NewRateLimiter(captionRequestsPerSecond),
 		httpClient:							&http.Client{Timeout: captionHTTPTimeout},
 	}
@@ -78,8 +80,18 @@ func (cdm *CaptionDownloadManager)WorkerGetVideoCaptions(i int)  {
                 // Channel closed, worker can exit
                 return
             }
-            cdm.httpRequestGetVideoCaptionsAndSaveToFile(downloadJob)
-            // Errors are already recorded in the function with specific context
+            // Errors are already recorded (with context) inside the function. Here
+            // we additionally manage the retry worklist: a permanent failure adds
+            // the video (keyed by URL, deduped), a success prunes it. A context
+            // cancellation is a shutdown, not a caption failure — skip it.
+            err := cdm.httpRequestGetVideoCaptionsAndSaveToFile(downloadJob)
+            if err != nil {
+                if cdm.ctx.Err() == nil {
+                    cdm.retryWorklist.RecordFailure(downloadJob.Channel, downloadJob.Id, downloadJob.Originalurl, downloadJob.Upload_date)
+                }
+            } else {
+                cdm.retryWorklist.RemoveSuccess(downloadJob.Originalurl)
+            }
 
         case <-cdm.ctx.Done():
             // Context cancelled - graceful shutdown

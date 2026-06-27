@@ -23,3 +23,5 @@ logs/
 binaries/
 
 cookies_for_uploading_to_prod/
+# Generated retry worklist (runtime state)
+captions_to_retry.csv

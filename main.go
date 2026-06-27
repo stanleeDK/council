@@ -86,6 +86,8 @@ import (
     "flag"
 
     "os"
+    "os/signal"
+    "syscall"
 	"io"
 	"log"
     "time"
@@ -96,8 +98,6 @@ import (
     // "bufio"
     // "encoding/json"
     // "encoding/csv"
-    // "os/signal"
-    // "syscall"
     // "strconv"
     // "net/http"
     // "strconv"
@@ -109,6 +109,7 @@ import (
 const pathOfCaptionsAlreadyDownloaded   = "./output_captions"
 const numWorkersforChannels             = 5
 const listofchannelstoscrape            = "video_sources.csv"
+const retryWorklistFile                 = "captions_to_retry.csv"
 const ytdlpDumpJSON                     = "--dump-json"
 const ytdlpNoWarnings                   = "--no-warnings"
 const ytdlpCookiesFile                  = "cookies.txt"
@@ -133,6 +134,22 @@ func main() {
     // dates). Off by default; flip the default here or pass -e on the CLI.
     sendRunSummaryEmail := flag.Bool("e", false, "send a run-summary email after the run completes")
     flag.Parse()
+
+    // Ensure all directories the app writes to exist (they are gitignored, so on a
+    // fresh box / after a rebuild they won't be present). Created before any file
+    // is opened below.
+    for _, dir := range []string{"logs/application_logs", "logs/error_logs", "output_captions"} {
+        if err := os.MkdirAll(dir, 0755); err != nil {
+            log.Printf("WARNING: could not create directory %s: %v", dir, err)
+        }
+    }
+
+    // Simple log retention: drop log lines older than 14 days from the app and
+    // error logs so they don't grow without bound. Runs every time the app wakes
+    // up (e.g. from cron). Done before the loggers open the files for appending.
+    const logRetention = 14 * 24 * time.Hour
+    pruneOldLogLines("logs/application_logs/app.log", logRetention)
+    pruneOldLogLines("logs/error_logs/errors.log", logRetention)
 
     environment := os.Getenv("GO_ENV")
     fmt.Println (environment)
@@ -169,6 +186,10 @@ func main() {
     // Collects per-run stats (channels/videos/captions) for the summary email.
     runSummary := NewRunSummary()
 
+    // Durable worklist of videos whose caption download failed permanently, so
+    // they can be retried later (see the -r retry runner TODO).
+    retryWorklist := NewRetryWorklist(retryWorklistFile)
+
 
 
 
@@ -179,14 +200,17 @@ func main() {
 
 
 
-    // // 3 ---- HANDLE SHUTDOWN SIGNALS (Ctrl+C, kill, etc.)
-    // sigChan := make(chan os.Signal, 1)
-    // signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-    // go func() {
-    //     sig := <-sigChan
-    //     log.Printf("Received shutdown signal: %v. Initiating graceful shutdown...", sig)
-    //     cancel() // Cancel context - all workers will stop
-    // }()
+    // 3 ---- HANDLE SHUTDOWN SIGNALS (Ctrl+C, kill, cron `timeout`, box shutdown)
+    // On SIGINT/SIGTERM we cancel the context, which propagates to the
+    // exec.CommandContext yt-dlp processes and the HTTP caption requests so they
+    // stop cleanly (no orphaned yt-dlp processes) and the app exits gracefully.
+    sigChan := make(chan os.Signal, 1)
+    signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+    go func() {
+        sig := <-sigChan
+        log.Printf("Received shutdown signal: %v. Initiating graceful shutdown...", sig)
+        cancel() // Cancel context - all workers will stop
+    }()
 
 
 
@@ -241,7 +265,7 @@ func main() {
 
 
     // 8 ---- START DOWNLOADING CAPTIONS
-    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator, runSummary, numWorkersforChannels)
+    captionDownloader := NewCaptionDownloadManager(ctx, errorAggregator, runSummary, retryWorklist, numWorkersforChannels)
     // Fill the jobs channel in a goroutine so that the download workers (started by
     // Start() below) can drain it concurrently. Otherwise, with a buffered channel of
     // size 100, filling more than 100 jobs before any worker exists would block forever
@@ -249,6 +273,10 @@ func main() {
     // close()s the channel when done, which signals the workers to exit.
     go manager.makeResultsInHashMapAvailableToParameterChannel(captionDownloader.CaptionsToBeDownloaded)
     captionDownloader.Start()
+
+    // Persist the worklist of permanently-failed caption downloads (new failures
+    // added, succeeded ones pruned) for a later retry run.
+    retryWorklist.Flush()
 
     log.Println("Caption downloads process ended.")
 
